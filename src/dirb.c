@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
   strncpy(options.url_inicial, argv[1], STRING_SIZE-1);
 
   if(argc==2 || strncmp(argv[2], "-", 1)==0) {
-    strncpy(options.mfile, "/usr/share/dirb/wordlists/common.txt", STRING_SIZE-1);
+    strncpy(options.mfile, DEFAULT_WORDLIST, STRING_SIZE-1);
     optind+=1;
     } else {
     strncpy(options.mfile, argv[2], STRING_SIZE-1);
