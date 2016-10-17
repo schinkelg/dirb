@@ -50,6 +50,9 @@ retry:
   if(curl) {
 
     curl_easy_setopt(curl, CURLOPT_URL, resp_url);
+    if(options.port){
+      curl_easy_setopt(curl, CURLOPT_PORT, options.port);
+    }
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, TIMEOUT);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, options.agente);

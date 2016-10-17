@@ -64,6 +64,7 @@ struct opciones {
   int extensions_list;
   int saveoutput;
   int print_location;
+  int port;
   int finetunning;
   int interactive;
   int nothide;

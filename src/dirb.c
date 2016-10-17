@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
     optind+=2;
     }
 
-  while((c = getopt(argc,argv,"a:c:d:fgh:H:ilm:M:n:N:o:p:P:rRsSvwx:X:u:tz:"))!= -1){
+  while((c = getopt(argc,argv,"a:c:d:fgh:H:ij:lm:M:n:N:o:p:P:rRsSvwx:X:u:tz:"))!= -1){
     switch(c) {
       case 'a':
         options.use_agent=1;
@@ -100,6 +100,9 @@ int main(int argc, char **argv) {
         break;
       case 'i':
         options.insensitive=1;
+        break;
+      case 'j':
+        options.port=atoi(optarg);
         break;
       case 'l':
         options.print_location=1;
@@ -260,6 +263,7 @@ void ayuda(void) {
   // printf(" -h <vhost_string> : Use your custom Virtual Host header.\n");
   printf(" -H <header_string> : Add a custom header to the HTTP request.\n");
   printf(" -i : Use case-insensitive search.\n");
+  printf(" -j : Use port to connect to.\n");
   printf(" -l : Print \"Location\" header when found.\n");
   // printf(" -M <mutations> / -m <muts_file> : Mutate found URLs with this extensions.\n");
   // printf(" -n <url>: Use the response for this URL as NEC.\n");
