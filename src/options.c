@@ -87,6 +87,12 @@ void get_options(void) {
   if(options.insensitive==1) {
     IMPRIME("OPTION: Using Case-Insensitive Searches\n");
     }
+  
+  // -j
+
+  if(options.port) {
+    IMPRIME("PORT: %d\n", options.port);
+    }
 
   // -l
 
