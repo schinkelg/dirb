@@ -28,7 +28,7 @@
 #define BIGWORDLIST   	100000
 #define AGENT_STRING  	"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"
 #define MAX_ALERT   	100
-#define STRING_SIZE   	256
+#define STRING_SIZE   	10240
 #define DUMP_TIMEOUT  	100
 
 #define DUMP_DIR    	".cache/dirb/resume"
