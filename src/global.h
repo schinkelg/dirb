@@ -36,3 +36,5 @@
 #define WORDLIST_DUMP 	".cache/dirb/resume/wordlist.dump"
 #define DIRLIST_DUMP  	".cache/dirb/resume/dirlist.dump"
 
+#define DEFAULT_WORDLIST  "/usr/share/dirb/wordlists/common.txt"
+
