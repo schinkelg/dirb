@@ -1,0 +1,12 @@
+*.log
+*.o
+Makefile
+config.h
+config.status
+dirb
+gendict
+gendict_src/.deps/
+src/.deps/
+stamp-h1
+web2dic/.deps/
+web2dic/html2dic
