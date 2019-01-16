@@ -29,7 +29,9 @@ void dump(void) {
   tm = time(NULL);
   ptr = localtime(&tm);
 
-  if(options.debuging>2) printf("[++] dump() Dumping Session State AT %s", asctime(ptr)); fflush(stdout);
+  if(options.debuging>2) printf("[++] dump() Dumping Session State AT %s", asctime(ptr));
+  
+  fflush(stdout);
 
 
   // Comprobamos si existe el directorio y sino intentamos crealo

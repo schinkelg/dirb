@@ -60,8 +60,8 @@ retry:
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_body);
 
     if(options.use_vhost) {
-    strncpy(host_header, "Host: ", 6);
-    strncat(host_header, options.vhost, STRING_SIZE-1-strlen(host_header));
+    strncpy(host_header, "Host: ", 7);
+    strncat(host_header, options.vhost, STRING_SIZE-strlen(host_header));
       slist = curl_slist_append(slist, host_header);
       curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
       }

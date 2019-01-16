@@ -77,7 +77,7 @@ struct words *crea_wordlist(char *ficheros) {
       if(cbuffer[0]=='#') cbuffer[0]='\0';
 
       if(strlen(cbuffer)) {
-        strncpy(current->word, cbuffer, STRING_SIZE-1);
+        strncpy(current->word, cbuffer, STRING_SIZE);
         contador++;
         current->siguiente=(struct words *)malloc(sizeof(struct words));
         memset(current->siguiente, 0, sizeof(struct words));
@@ -155,7 +155,7 @@ struct words *crea_wordlist_fich(char *fichero) {
 
     // Metemos en la lista
 
-    strncpy(ecurrent->word, cbuffer, STRING_SIZE-1);
+    strncpy(ecurrent->word, cbuffer, STRING_SIZE);
 
     if(options.debuging>5) printf("[+++++] crea_wordlist_fich() ADD_WORD: %s\n", ecurrent->word);
 

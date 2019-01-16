@@ -86,8 +86,8 @@ struct result *calcula_nec(char *direccion) {
   memset(url, 0, STRING_SIZE);
   strncpy(url, direccion, STRING_SIZE-1);
 
-  strncat(rand_url1, exts_current->word, STRING_SIZE-1-strlen(rand_url1));
-  strncat(url, rand_url1, STRING_SIZE-1-strlen(url));
+  strncat(rand_url1, exts_current->word, STRING_SIZE-strlen(rand_url1));
+  strncat(url, rand_url1, STRING_SIZE-strlen(url));
 
   nec1=get_url(url);
 
@@ -120,8 +120,8 @@ struct result *calcula_nec(char *direccion) {
   memset(url, 0, STRING_SIZE);
   strncpy(url, direccion, STRING_SIZE-1);
 
-  strncat(rand_url2, exts_current->word, STRING_SIZE-1-strlen(rand_url2));
-  strncat(url, rand_url2, STRING_SIZE-1-strlen(url));
+  strncat(rand_url2, exts_current->word, STRING_SIZE-strlen(rand_url2));
+  strncat(url, rand_url2, STRING_SIZE-strlen(url));
 
   nec2=get_url(url);
 
@@ -157,7 +157,7 @@ struct result *calcula_nec(char *direccion) {
           IMPRIME("    (Try using FineTunning: '-f')\n");
           if(options.exitonwarn) { next_dir=1; }
           } else {
-          strncpy(mynec->location, nec1.location, STRING_SIZE-1);
+          strncpy(mynec->location, nec1.location, STRING_SIZE);
           }
         break;
 
@@ -175,7 +175,7 @@ struct result *calcula_nec(char *direccion) {
     }
 
   mynec->codigo_http=nec1.codigo_http;
-  strncpy(mynec->server, nec1.server, STRING_SIZE-1);
+  strncpy(mynec->server, nec1.server, STRING_SIZE);
 
   if(options.debuging>2) printf("[++] calcula_nec() NEC: %d - %d\n", mynec->codigo_http, mynec->body_size);
 

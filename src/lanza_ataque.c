@@ -86,7 +86,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         //elimina_dup_addr(dirlist_current); (!) En teoria no debe haber duplicados
 
         memset(url_base, 0, STRING_SIZE);
-        strncpy(url_base, dirlist_current->word, STRING_SIZE-1);
+        strncpy(url_base, dirlist_current->word, STRING_SIZE);
         limpia_url(url_base);
 
         if(!options.silent_mode) printf("%*c\r", columns, ' ');
@@ -152,7 +152,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       wordlist=wordlist->siguiente;
       }
 
-    strncpy(tested_word, wordlist->word, STRING_SIZE-1);
+    strncpy(tested_word, wordlist->word, STRING_SIZE);
     limpia_url(tested_word);
 
     if(strlen(tested_word)==0) {
@@ -163,15 +163,15 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
     // Inicializamos resume
 
-    strncpy(options.current_dir, url_base, STRING_SIZE-1);
-    strncpy(options.current_word, tested_word, STRING_SIZE-1);
+    strncpy(options.current_dir, url_base, STRING_SIZE);
+    strncpy(options.current_word, tested_word, STRING_SIZE);
 
     if(descargadas % DUMP_TIMEOUT == 0) dump();
 
 
     // Concatenamos la extension correspondiente
 
-    strncat(tested_word, exts_current->word, STRING_SIZE-1-strlen(tested_word));
+    strncat(tested_word, exts_current->word, STRING_SIZE-strlen(tested_word));
 
     exts_current=exts_current->siguiente;
 
@@ -181,8 +181,8 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
     // Generamos la URL y la limpiamos
 
-    strncpy(tested_url, url_base, STRING_SIZE-1);
-    strncat(tested_url, tested_word, STRING_SIZE-1-strlen(tested_url));
+    strncpy(tested_url, url_base, STRING_SIZE);
+    strncat(tested_url, tested_word, STRING_SIZE-strlen(tested_url));
     limpia_url(tested_word);
 
 
@@ -257,7 +257,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       case 302:
         alert=0;
 
-        strncpy(location_temp, tested_estruct.location, STRING_SIZE-1);
+        strncpy(location_temp, tested_estruct.location, STRING_SIZE);
         if(options.finetunning==1) location_clean(location_temp+compare_str(location_temp, nec[exts_pos]->location), tested_word);
 
         if(options.debuging>3) printf("[+++] lanza_ataque() Location: '%s'\n", location_temp);
@@ -270,7 +270,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
           // Comprobamos si es un directorio
 
           memset(tested_url2, 0, STRING_SIZE);
-          strncpy(tested_url2, tested_estruct.url, STRING_SIZE-1);
+          strncpy(tested_url2, tested_estruct.url, STRING_SIZE);
           barra(tested_url2);
 
           if(options.debuging>3) printf("[+++] lanza_ataque() Direcroty_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
@@ -298,7 +298,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
           }
 
         memset(tested_url2, 0, STRING_SIZE);
-        strncpy(tested_url2, tested_estruct.url, STRING_SIZE-1);
+        strncpy(tested_url2, tested_estruct.url, STRING_SIZE);
         memset(&tested_estruct2, 0, sizeof(struct result));
 
         if(strncmp(tested_url2+strlen(tested_url2)-1, "\x2f", 1)==0) {

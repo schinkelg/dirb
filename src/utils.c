@@ -36,7 +36,7 @@ void barra(char *barr) {
   if(barr[strlen(barr)-1]=='/') {
     if(options.debuging>5) printf("[+++++] barra() LAST = 0x2F\n");
     } else {
-    strncat(barr, "\x2f", 1);
+    strncat(barr, "\x2f", 2);
     }
 
 }
@@ -155,7 +155,7 @@ int location_cmp(char *A, char *B) {
     if(ptr!=0) A=ptr+1;
     }
 
-  if(options.debuging>4) printf("[++++] location_cmp() A[%d]: '%s'\n", strlen(A), uri_decode(A));
+  if(options.debuging>4) printf("[++++] location_cmp() A[%zu]: '%s'\n", strlen(A), uri_decode(A));
 
   if(strncmp(B, "http://", 7)==0 || strncmp(B, "https://", 8)==0) {
     ptr=(char *)strchr(B, '/');
@@ -166,11 +166,11 @@ int location_cmp(char *A, char *B) {
     if(ptr!=0) B=ptr+1;
     }
 
-  if(options.debuging>4) printf("[++++] location_cmp() B[%d]: '%s'\n", strlen(B), uri_decode(B));
+  if(options.debuging>4) printf("[++++] location_cmp() B[%zu]: '%s'\n", strlen(B), uri_decode(B));
 
   result=strncmp(uri_decode(A), uri_decode(B), strlen(A)>strlen(B) ? strlen(A) : strlen(B));
 
-  if(options.debuging>4) printf("[++++] location_cmp() RESULT: %d (%d)\n", result, strlen(A)>strlen(B) ? strlen(A) : strlen(B));
+  if(options.debuging>4) printf("[++++] location_cmp() RESULT: %d (%zu)\n", result, strlen(A)>strlen(B) ? strlen(A) : strlen(B));
 
   return result;
 
