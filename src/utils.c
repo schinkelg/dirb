@@ -80,6 +80,7 @@ void elimina_dupwords(struct words *puntero) {
 
   while(epun->siguiente!=0) {
 
+    if(next->word == 0) break;
     if(
     (strncmp(epun->word, next->word, STRING_SIZE-1)==0 && !options.insensitive && next->siguiente!=0)
     ||
@@ -351,8 +352,8 @@ void init_exts(void) {
     exts_current=(struct words *)malloc(sizeof(struct words));
     memset(exts_current, 0, sizeof(struct words));
     exts_base=exts_current;
-
-    strncpy(exts_current->word, "", 2);
+    exts_current->word = (char*) malloc(2);
+    strcpy(exts_current->word, "");
 
     exts_current->siguiente=(struct words *)malloc(sizeof(struct words));
     memset(exts_current->siguiente, 0, sizeof(struct words));

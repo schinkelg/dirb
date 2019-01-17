@@ -86,7 +86,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         //elimina_dup_addr(dirlist_current); (!) En teoria no debe haber duplicados
 
         memset(url_base, 0, STRING_SIZE);
-        strncpy(url_base, dirlist_current->word, STRING_SIZE);
+        strncpy(url_base, dirlist_current->word, STRING_SIZE-1);
         limpia_url(url_base);
 
         if(!options.silent_mode) printf("%*c\r", columns, ' ');
@@ -152,7 +152,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       wordlist=wordlist->siguiente;
       }
 
-    strncpy(tested_word, wordlist->word, STRING_SIZE);
+    strncpy(tested_word, wordlist->word, STRING_SIZE-1);
     limpia_url(tested_word);
 
     if(strlen(tested_word)==0) {

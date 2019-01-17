@@ -38,7 +38,7 @@ struct code {
 
 struct words {
   void *anterior;
-  char word[STRING_SIZE];
+  char *word;
   void *siguiente;
 };
 
