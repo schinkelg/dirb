@@ -151,9 +151,9 @@ retry:
  *
  */
 
-size_t get_header(void *ptr, size_t size, size_t nmemb, void *stream) {
-  int len;
-  int i;
+size_t get_header(void *ptr, size_t size, size_t nmemb) {
+  unsigned int len;
+  unsigned int i;
 
 
   len=size*nmemb;
@@ -167,20 +167,19 @@ size_t get_header(void *ptr, size_t size, size_t nmemb, void *stream) {
   // Si tiene cabecera Location
 
   if(strncasecmp(ptr, "Location: ", 10)==0 || strncasecmp(ptr, "Content-Location: ", 18)==0) {
-	if(strncasecmp(ptr, "Content-Location: ", 18)==0) ptr=ptr+8;
-	ptr=ptr+10;
+    if(strncasecmp(ptr, "Content-Location: ", 18)==0) ptr=ptr+8;
+    ptr=ptr+10;
     strncpy(estructura.location, ptr, STRING_SIZE-1);
     limpia_url(estructura.location);
     if(options.debuging>3) printf("[+++] get_header() LOCATION = %s\n", estructura.location);
-    }
+  }
 
 
   // Si tiene cabecera Server
-
   if(strncasecmp(ptr, "Server: ", 8)==0) {
     strncpy(estructura.server,ptr+8,STRING_SIZE-1);
     if(options.debuging>3) printf("[+++] get_header() SERVER = %s", estructura.server);
-    }
+  }
 
 
   // Tamaño
@@ -191,11 +190,10 @@ size_t get_header(void *ptr, size_t size, size_t nmemb, void *stream) {
   // Numero de lines
 
   for(i=0;i<len;i++) {
-        if(strncmp(ptr+i, "\n", 1)==0) estructura.head_lines++;
-      }
+    if(strncmp(ptr+i, "\n", 1)==0) estructura.head_lines++;
+  }
 
   return len;
-
 }
 
 
@@ -206,9 +204,9 @@ size_t get_header(void *ptr, size_t size, size_t nmemb, void *stream) {
  *
  */
 
-size_t get_body(void *ptr, size_t size, size_t nmemb, void *stream) {
-  int len;
-  int i;
+size_t get_body(void *ptr, size_t size, size_t nmemb) {
+  unsigned int len;
+  unsigned int i;
   int c;
 
   len=size*nmemb;

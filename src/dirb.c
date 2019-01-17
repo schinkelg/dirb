@@ -6,6 +6,7 @@
  */
 
 #include "dirb.h"
+#include <malloc.h>
 
 
 /*
@@ -194,6 +195,10 @@ int main(int argc, char **argv) {
   // Creamos la lista de palabras
 
   palabras=crea_wordlist(options.mfile);
+
+  struct mallinfo mi;
+  mi = mallinfo();
+  printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
 
   // Abrimos el fichero de mutations y creamos la lista
 

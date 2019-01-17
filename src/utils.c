@@ -327,7 +327,7 @@ void cierre(void) {
  */
 
 char *code2string(struct code *a, u_int v) {
-  int i=0;
+  unsigned int i=0;
 
   while(a[i].codenum!=v && a[i].codenum!=0xff) {
   i++;
@@ -372,7 +372,7 @@ void init_exts(void) {
  */
 
 char *uri_decode(char *uri) {
-  int i=0;
+  unsigned int i=0;
   int ptr=0;
   char *decoded;
   char hexa[3];
@@ -414,7 +414,7 @@ char *uri_decode(char *uri) {
  */
 
 int compare_str(char *A, char *B) {
-  int i=0;
+  unsigned int i=0;
 
   for(i=0; i<strlen(A); i++) {
 	if(A[i]!=B[i]) return i;

@@ -29,7 +29,7 @@ struct result {
 // Codigo HTTP
 
 struct code {
-  int codenum;
+  unsigned int codenum;
   char desc[STRING_SIZE];
 };
 
