@@ -37,6 +37,7 @@ int main(int argc, char *const *argv) {
   exts_num=0;
 
   options.agente = AGENT_STRING;
+  struct curl_slist *slist;
 
   dirlist_current=(struct words *)malloc(sizeof(struct words));
   memset(dirlist_current, 0, sizeof(struct words));
@@ -45,10 +46,56 @@ int main(int argc, char *const *argv) {
 
   curl=curl_easy_init();
 
+  if(!curl) {
+    printf("[+++] get_url() libcurl failed. Exiting...\n");
+    exit(-1);
+  }
+
+  slist = 0;
+  curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, TIMEOUT);
+  curl_easy_setopt(curl, CURLOPT_USERAGENT, options.agente);
+  curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, get_header);
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_body);
+
+  if(options.port) {
+    curl_easy_setopt(curl, CURLOPT_PORT, options.port);
+  }
+
+  if(options.use_vhost) {    
+    slist = curl_slist_append(slist, options.vhost);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+  }
+
+  if(options.add_header) {
+    slist = curl_slist_append(slist, options.header_string);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+  }
+
+  if(options.use_proxy) {
+    curl_easy_setopt(curl, CURLOPT_PROXY, options.proxy);
+  }
+
+  if(options.use_proxypass) {
+    curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, options.proxypass_string);
+  }
+
+  if(options.use_pass) {
+    curl_easy_setopt(curl, CURLOPT_USERPWD, options.pass_string);
+  }
+
+  if(options.use_cookie) {
+    curl_easy_setopt(curl, CURLOPT_COOKIE, options.cookie);
+  }
+
+  if(options.verify_ssl==0) {
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
+  }
   // Recepcion de parametros
 
   if(argc<2) {
-    ayuda();
+    usage();
     exit(-1);
     }
 
@@ -91,8 +138,8 @@ int main(int argc, char *const *argv) {
         break;
       case 'h':
         options.use_vhost=1;
-        options.vhost = (char*) malloc(strlen(optarg)+1);
-        strcpy(options.vhost, optarg);
+        options.vhost = malloc(strlen(optarg)+7);
+        snprintf(options.vhost, strlen(optarg)+6, "Host: %s", optarg);
         break;
       case 'H':
         if(options.add_header) {
@@ -208,10 +255,14 @@ int main(int argc, char *const *argv) {
   // Lanzamos el bucle de descarga
 
   lanza_ataque(options.url_inicial, palabras);
-
+  mi = mallinfo();
+  printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
   // Finalizamos
 
   cierre();
+
+  mi = mallinfo();
+  printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
   exit(0);
 
 }
@@ -240,7 +291,7 @@ void banner(void) {
  *
  */
 
-void ayuda(void) {
+void usage(void) {
 
   printf("./dirb <url_base> [<wordlist_file(s)>] [options]\n");
 
@@ -259,7 +310,7 @@ void ayuda(void) {
   // printf(" -d <debug_level> : Activate DEBUGing.\n");
   printf(" -f : Fine tunning of NOT_FOUND (404) detection.\n");
   // printf(" -g : Save found URLs to disk. (Still not implemented)\n")
-  // printf(" -h <vhost_string> : Use your custom Virtual Host header.\n");
+  printf(" -h <vhost_string> : Use your custom Virtual Host header.\n");
   printf(" -H <header_string> : Add a custom header to the HTTP request.\n");
   printf(" -i : Use case-insensitive search.\n");
   printf(" -j : Use port to connect to.\n");
@@ -288,5 +339,3 @@ void ayuda(void) {
   printf(" ./dirb https://secure_url/ (Simple Test with SSL)\n");
 
 }
-
-

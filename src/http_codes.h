@@ -51,7 +51,6 @@
 
 
 // HTTP Code Strings
-
 static struct code code2message[] = {
   { HTTP_OK,                      "Ok" },
   { HTTP_MOVED_PERMANENTLY,       "Moved Permanently" },
@@ -66,4 +65,3 @@ static struct code code2message[] = {
   { HTTP_SERVICE_UNAVAILABLE,     "Service Temporarily Unavailable" },
   { 0xff,                         "Unknown"},
 };
-

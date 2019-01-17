@@ -14,29 +14,20 @@
  *
  */
 
-int get_necs(char *direccion){
-  char initial_url[STRING_SIZE];
+int get_necs(const char *direccion) {
   int exts_pos=0;
   int necs=0;
-
 
   if(!options.silent_mode) printf("*** Calculating NOT_FOUND code...\r");
   fflush(stdout);
 
   // Inicializamos
-
-  memset(initial_url, 0, STRING_SIZE);
-
   exts_current=exts_base;
 
-  strncpy(initial_url, direccion, STRING_SIZE-1);
-
-
   // Bucle
-
   for(exts_pos=0;exts_pos<exts_num;exts_pos++) {
 
-    nec[exts_pos]=calcula_nec(initial_url);
+    nec[exts_pos]=calcula_nec(direccion);
 
     if(options.debuging>1) printf("[+] calcula_nec() NEC[%s]: %d -> %s\n", exts_current->word, nec[exts_pos]->codigo_http, code2string(code2message, nec[exts_pos]->codigo_http));
 
@@ -56,7 +47,6 @@ int get_necs(char *direccion){
   fflush(stdout);
 
   return necs;
-
 }
 
 
@@ -65,34 +55,35 @@ int get_necs(char *direccion){
  *
  */
 
-struct result *calcula_nec(char *direccion) {
+struct result *calcula_nec(const char *direccion) {
   struct result nec1, nec2;
   struct result *mynec;
-  char url[STRING_SIZE];
-  char rand_url1[STRING_SIZE]="randomfile1";
-  char rand_url2[STRING_SIZE]="frand2";
+  char *url;
+  char *random_base_url1 = "randomfile1";
+  char *random_base_url2 = "frand2";
+  char *rand_url1;
+  char *rand_url2;
+  unsigned int length;
 
   // Inicializamos
-
   mynec=malloc(sizeof(struct result));
   memset(mynec, 0, sizeof(struct result));
-
   memset(&nec1, 0, sizeof(struct result));
   memset(&nec2, 0, sizeof(struct result));
 
-
   // Calculo del primer NEC
+  length = strlen(random_base_url1)+strlen(exts_current->word)+1;
+  rand_url1 = malloc(length);
+  snprintf(rand_url1, length-1, "%s%s", random_base_url1, exts_current->word);
 
-  memset(url, 0, STRING_SIZE);
-  strncpy(url, direccion, STRING_SIZE-1);
-
-  strncat(rand_url1, exts_current->word, STRING_SIZE-strlen(rand_url1));
-  strncat(url, rand_url1, STRING_SIZE-strlen(url));
+  length = strlen(direccion)+strlen(rand_url1)+1;
+  url = malloc(length);
+  snprintf(url, length-1, "%s%s", direccion, rand_url1);
 
   nec1=get_url(url);
+  free(url);
 
   if(options.debuging>2) printf("[++] calcula_nec() NEC1: %d\n", nec1.codigo_http);
-
 
   switch(nec1.codigo_http) {
 
@@ -113,23 +104,24 @@ struct result *calcula_nec(char *direccion) {
       break;
 
     }
-
+    free(rand_url1);
 
   // Calculo del segundo NEC
+  length = strlen(random_base_url2)+strlen(exts_current->word)+1;
+  rand_url2 = malloc(length);
+  snprintf(rand_url2, length-1, "%s%s", random_base_url2, exts_current->word);
 
-  memset(url, 0, STRING_SIZE);
-  strncpy(url, direccion, STRING_SIZE-1);
+  length = strlen(direccion)+strlen(rand_url2)+1;
+  url = malloc(length);
+  snprintf(url, length-1, "%s%s", direccion, rand_url2);
 
-  strncat(rand_url2, exts_current->word, STRING_SIZE-strlen(rand_url2));
-  strncat(url, rand_url2, STRING_SIZE-strlen(url));
-
+  nec1=get_url(url);
   nec2=get_url(url);
+  free(url);
 
   if(options.debuging>2) printf("[++] calcula_nec() NEC2: %d\n", nec2.codigo_http);
 
-
   // Comparamos
-
   if(nec1.codigo_http==nec2.codigo_http) {
 
     switch(nec2.codigo_http) {
@@ -168,19 +160,16 @@ struct result *calcula_nec(char *direccion) {
     }
 
   } else {
-
     IMPRIME("(!) WARNING: NOT_FOUND[%s] not stable, unable to determine the correct URLs {%d,%d}.\n", exts_current->word, nec1.codigo_http, nec2.codigo_http);
     IMPRIME("    (Server is returning random responses)\n");
     if(options.exitonwarn) { next_dir=1; }
-    }
+  }
 
+  free(rand_url2);
   mynec->codigo_http=nec1.codigo_http;
   strncpy(mynec->server, nec1.server, STRING_SIZE);
 
   if(options.debuging>2) printf("[++] calcula_nec() NEC: %d - %d\n", mynec->codigo_http, mynec->body_size);
 
   return mynec;
-
 }
-
-

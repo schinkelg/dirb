@@ -11,7 +11,6 @@
 
 
 /* Local Globales */
-
 struct result estructura;
 int in_word;
 
@@ -22,87 +21,28 @@ int in_word;
  */
 
 struct result get_url(char *resp_url) {
-  char host_header[STRING_SIZE];
-  struct curl_slist *slist;
+
 
 
 // Inicializamos
-
   errores=0;
   in_word = 1;
 
 
 retry:
-
   memset(&estructura, 0, sizeof(struct result));
-  memset(host_header, 0, STRING_SIZE);
-  strncpy(estructura.url,resp_url,STRING_SIZE-1);
+  strcpy(estructura.url,resp_url);
   estructura.body_size=0;
   estructura.head_size=0;
   estructura.body_lines=0;
   estructura.head_lines=1;
   estructura.estado=-1;
-  slist=0;
 
+  curl_easy_setopt(curl, CURLOPT_URL, resp_url);
+  
 
-// Lanzamos la peticion
-
-  if(curl) {
-
-    curl_easy_setopt(curl, CURLOPT_URL, resp_url);
-    if(options.port){
-      curl_easy_setopt(curl, CURLOPT_PORT, options.port);
-    }
-    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, TIMEOUT);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, options.agente);
-    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, get_header);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_body);
-
-    if(options.use_vhost) {
-    strncpy(host_header, "Host: ", 7);
-    strncat(host_header, options.vhost, STRING_SIZE-strlen(host_header));
-      slist = curl_slist_append(slist, host_header);
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-      }
-
-    if(options.add_header) {
-      slist = curl_slist_append(slist, options.header_string);
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-      }
-
-    if(options.use_proxy) {
-      curl_easy_setopt(curl, CURLOPT_PROXY, options.proxy);
-      }
-
-    if(options.use_proxypass) {
-    curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, options.proxypass_string);
-      }
-
-  if(options.use_pass) {
-      curl_easy_setopt(curl, CURLOPT_USERPWD, options.pass_string);
-      }
-
-    if(options.use_cookie) {
-      curl_easy_setopt(curl, CURLOPT_COOKIE, options.cookie);
-      }
-
-    if(options.verify_ssl==0) {
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
-      //curl_easy_setopt(curl, CURLOPT_SSLVERSION, 3);
-      }
-
-
-    estructura.estado=curl_easy_perform(curl);
-
-    curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &estructura.codigo_http);
-
-  } else {
-
-    if(options.debuging>3) printf("[+++] get_url() libcurl failed\n");
-
-  }
+  estructura.estado=curl_easy_perform(curl);
+  curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &estructura.codigo_http);
 
 
   /* Controlamos el resultado */
@@ -141,7 +81,6 @@ retry:
     }
 
   return estructura;
-
 }
 
 
@@ -238,6 +177,7 @@ size_t get_body(void *ptr, size_t size, size_t nmemb) {
     switch(c) {
       case '\n':
         estructura.body_lines++;
+        __attribute__ ((fallthrough));
       case '\r':
       case '\f':
       case '\t':
@@ -252,11 +192,7 @@ size_t get_body(void *ptr, size_t size, size_t nmemb) {
         in_word = 1;
         break;
     }
-
   }
 
   return len;
-
 }
-
-

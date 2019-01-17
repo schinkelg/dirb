@@ -10,7 +10,7 @@
 /* Funciones */
 // dirb.c
 void banner(void);
-void ayuda(void);
+void usage(void);
 
 // get_url.c
 struct result get_url(char *resp_url);
@@ -24,8 +24,8 @@ void lanza_ataque(char *url_base, struct words *wordlist);
 void get_options(void);
 
 // calculanec.c
-int get_necs(char *direccion);
-struct result *calcula_nec(char *direccion);
+int get_necs(const char *direccion);
+struct result *calcula_nec(const char *direccion);
 
 // crea_wordlist.c
 struct words *crea_wordlist(const char *ficheros);

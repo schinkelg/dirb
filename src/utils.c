@@ -403,5 +403,4 @@ char *uri_decode(char *uri) {
   *(decoded+ptr)='\0';
 
   return decoded;
-
 }
