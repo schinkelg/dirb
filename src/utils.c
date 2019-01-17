@@ -352,8 +352,7 @@ void init_exts(void) {
     exts_current=(struct words *)malloc(sizeof(struct words));
     memset(exts_current, 0, sizeof(struct words));
     exts_base=exts_current;
-    exts_current->word = (char*) malloc(2);
-    strcpy(exts_current->word, "");
+    exts_current->word = "";
 
     exts_current->siguiente=(struct words *)malloc(sizeof(struct words));
     memset(exts_current->siguiente, 0, sizeof(struct words));
@@ -404,22 +403,5 @@ char *uri_decode(char *uri) {
   *(decoded+ptr)='\0';
 
   return decoded;
-
-}
-
-
-/*
- * COMPARE_STR: Devuelve la posicion del primer caracater diferente
- *
- */
-
-int compare_str(char *A, char *B) {
-  unsigned int i=0;
-
-  for(i=0; i<strlen(A); i++) {
-	if(A[i]!=B[i]) return i;
-    }
-
-  return 0;
 
 }

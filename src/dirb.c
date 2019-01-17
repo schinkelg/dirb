@@ -14,7 +14,7 @@
  *
  */
 
-int main(int argc, char **argv) {
+int main(int argc, char *const *argv) {
   struct words *palabras;
   int c=0;
 
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
   listable=0;
   exts_num=0;
 
-  strncpy(options.agente, AGENT_STRING, STRING_SIZE-1);
+  options.agente = AGENT_STRING;
 
   dirlist_current=(struct words *)malloc(sizeof(struct words));
   memset(dirlist_current, 0, sizeof(struct words));
@@ -57,25 +57,28 @@ int main(int argc, char **argv) {
     resume();
     }
 
-  strncpy(options.url_inicial, argv[1], STRING_SIZE-1);
+  options.url_inicial = argv[1];
+  //strncpy(options.url_inicial, argv[1], STRING_SIZE-1);
 
   if(argc==2 || strncmp(argv[2], "-", 1)==0) {
-    strncpy(options.mfile, DEFAULT_WORDLIST, STRING_SIZE-1);
+    options.mfile = DEFAULT_WORDLIST;
     optind+=1;
-    } else {
-    strncpy(options.mfile, argv[2], STRING_SIZE-1);
+  } else {
+    options.mfile = argv[2];
     optind+=2;
-    }
+  }
 
   while((c = getopt(argc,argv,"a:c:d:fgh:H:ij:lm:M:n:N:o:p:P:rRsSvwx:X:u:tz:"))!= -1){
     switch(c) {
       case 'a':
         options.use_agent=1;
-        strncpy(options.agente, optarg, STRING_SIZE-1);
+        options.agente = (char*) malloc(strlen(optarg)+1);
+        strcpy(options.agente, optarg);
         break;
       case 'c':
         options.use_cookie=1;
-        strncpy(options.cookie, optarg, STRING_SIZE-1);
+        options.cookie = (char*) malloc(strlen(optarg)+1);
+        strcpy(options.cookie, optarg);
         break;
       case 'd':
         options.debuging=atoi(optarg);
@@ -88,7 +91,8 @@ int main(int argc, char **argv) {
         break;
       case 'h':
         options.use_vhost=1;
-        strncpy(options.vhost, optarg, STRING_SIZE-1);
+        options.vhost = (char*) malloc(strlen(optarg)+1);
+        strcpy(options.vhost, optarg);
         break;
       case 'H':
         if(options.add_header) {
@@ -176,13 +180,13 @@ int main(int argc, char **argv) {
 
   // Limpia el input
 
-  limpia_url(options.url_inicial);
+  //limpia_url(options.url_inicial);
 
-  if(options.lasting_bar && !strchr(options.url_inicial, '?')) barra(options.url_inicial);
+  //if(options.lasting_bar && !strchr(options.url_inicial, '?')) barra(options.url_inicial);
 
-  check_url(options.url_inicial);
+  //check_url(options.url_inicial);
 
-  limpia_url(options.mfile);
+  //limpia_url(options.mfile);
 
   // Chequeos iniciales
 
@@ -193,23 +197,13 @@ int main(int argc, char **argv) {
   IMPRIME("\n-----------------\n\n");
 
   // Creamos la lista de palabras
-
+  printf("file: %s", options.mfile);
   palabras=crea_wordlist(options.mfile);
 
   struct mallinfo mi;
   mi = mallinfo();
   printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
 
-  // Abrimos el fichero de mutations y creamos la lista
-
-  /*
-
-  if(options.mutations_file) {
-    muts_base=crea_wordlist_fich(options.mutation_file);
-    } else if(options.mutations_list) {
-    muts_base=crea_extslist(options.mutation_list);
-    }
-  */
 
   // Lanzamos el bucle de descarga
 

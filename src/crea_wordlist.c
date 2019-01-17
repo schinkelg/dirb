@@ -14,15 +14,17 @@
  *
  */
 
-struct words *crea_wordlist(char *ficheros) {
+struct words *crea_wordlist(const char *filenames) {
   FILE *file;
   struct words *current;
   char cbuffer[STRING_SIZE];
   char current_file[STRING_SIZE];
   char *apunt;
-
+  char *consumable;
 
   // Inicializamos
+  consumable = malloc(strlen(filenames)+1);
+  strcpy(consumable, filenames);
 
   current=(struct words *)malloc(sizeof(struct words));
   memset(current, 0, sizeof(struct words));
@@ -39,17 +41,17 @@ struct words *crea_wordlist(char *ficheros) {
 
   // Bucle de generacion de wordlist
 
-  while(strlen(ficheros)) {
+  while(strlen(consumable)) {
 
     // Separamos la lista de ficheros
 
-    strncpy(current_file, ficheros, STRING_SIZE-1);
+    strncpy(current_file, consumable, STRING_SIZE-1);
 
     apunt=(char *)strchr(current_file, ',');
 
     if(apunt!=0) *apunt='\0';
 
-    ficheros=ficheros+strlen(current_file)+1;
+    consumable=consumable+strlen(current_file)+1;
 
     // Abrimos el fichero
 
@@ -139,7 +141,6 @@ struct words *crea_wordlist_fich(char *fichero) {
 
 
   // Abrimos el fichero y creamos su lista
-
   if((file=fopen(fichero, "r"))==0) {
   IMPRIME("\n(!) FATAL: Error opening words file: %s\n", fichero);
   exit(-1);
@@ -151,7 +152,6 @@ struct words *crea_wordlist_fich(char *fichero) {
   memset(cbuffer, 0, STRING_SIZE);
 
   // Leemos y limpiamos
-
   if(fgets(cbuffer, STRING_SIZE-1, file)==0) {
       if(options.debuging>4) printf("[++++] crea_wordlist_fich() Ending the parse of file: %s\n", fichero);
       break;
@@ -216,7 +216,6 @@ struct words *crea_extslist(char *lista) {
   while(strlen(lista)) {
 
     // Separamos la lista de extensiones
-
     strncpy(cbuffer, lista, STRING_SIZE-1);
 
     apunt=(char *)strchr(cbuffer, ',');
@@ -253,22 +252,18 @@ struct words *crea_extslist(char *lista) {
 }
 
 /*
- * COUNT_WORDS: Cuenta las palabras de una wordlist
+ * COUNT_WORDS: Count the words in the list.
  *
  */
 
-int count_words(struct words *list) {
-  int count=0;
-  struct words *ptr;
+int count_words(const struct words *list) {
+  unsigned int count=0;
+  struct words *ptr= (struct words*)list;
 
-  ptr=list;
-
-  while(ptr->siguiente!=0) {
-	count++;
-	ptr=ptr->siguiente;
+  while(0 != ptr->siguiente) {
+	 count++;
+	 ptr=ptr->siguiente;
 	}
 
   return count;
-
 }
-

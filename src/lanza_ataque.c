@@ -45,8 +45,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
   exts_current=exts_base;
   exts_pos=0;
 
-  memset(url_base, 0, STRING_SIZE);
-  strncpy(url_base, inicio, STRING_SIZE-1);
+  strcpy(url_base, inicio);
   character=0;
 
 
@@ -59,11 +58,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
   while(1) {
 
     // Inicializamos cada bucle
-
     memset(&tested_estruct, 0, sizeof(struct result));
-    memset(tested_word, 0, STRING_SIZE);
-    memset(tested_url, 0, STRING_SIZE);
-    memset(location_temp, 0, STRING_SIZE);
     existant=1;
     fflush(outfile);
 
@@ -83,16 +78,13 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
         if(options.debuging>2) printf("[++] lanza_ataque() RECURSE: %d\n", options.recursion_level);
 
-        //elimina_dup_addr(dirlist_current); (!) En teoria no debe haber duplicados
-
-        memset(url_base, 0, STRING_SIZE);
-        strncpy(url_base, dirlist_current->word, STRING_SIZE-1);
+        strcpy(url_base, dirlist_current->word);
         limpia_url(url_base);
 
         if(!options.silent_mode) printf("%*c\r", columns, ' ');
         IMPRIME("\n---- Entering directory: %s ----\n", url_base);
 
-		get_necs(url_base);
+        get_necs(url_base);
         wordlist=wordlist_base;
         options.recursion_level--;
         dirlist_current=dirlist_current->siguiente;
@@ -258,7 +250,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         alert=0;
 
         strncpy(location_temp, tested_estruct.location, STRING_SIZE);
-        if(options.finetunning==1) location_clean(location_temp+compare_str(location_temp, nec[exts_pos]->location), tested_word);
+        if(options.finetunning==1) location_clean(location_temp+strcmp(location_temp, nec[exts_pos]->location), tested_word);
 
         if(options.debuging>3) printf("[+++] lanza_ataque() Location: '%s'\n", location_temp);
 
@@ -268,9 +260,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
           existant=1;
 
           // Comprobamos si es un directorio
-
-          memset(tested_url2, 0, STRING_SIZE);
-          strncpy(tested_url2, tested_estruct.url, STRING_SIZE);
+          strcpy(tested_url2, tested_estruct.url);
           barra(tested_url2);
 
           if(options.debuging>3) printf("[+++] lanza_ataque() Direcroty_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
@@ -297,8 +287,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
             }
           }
 
-        memset(tested_url2, 0, STRING_SIZE);
-        strncpy(tested_url2, tested_estruct.url, STRING_SIZE);
+        strcpy(tested_url2, tested_estruct.url);
         memset(&tested_estruct2, 0, sizeof(struct result));
 
         if(strncmp(tested_url2+strlen(tested_url2)-1, "\x2f", 1)==0) {
@@ -353,43 +342,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         IMPRIME("  (Location: '%s')\n", tested_estruct.location);
         }
 
-      // Añadimos mutaciones
-
-      /*
-
-      if(options.mutations_file || options.mutations_list) {
-
-        wordlist_current=wordlist_final;
-
-        // Bucle de extensiones
-
-        muts_current=muts_base;
-
-        while(muts_current->siguiente!=0) {
-
-          // Metemos en la lista
-
-          strncpy(wordlist_current->word, tested_word, STRING_SIZE-1);
-          strncat(wordlist_current->word, muts_current->word, STRING_SIZE-1-strlen(wordlist_current->word));
-
-          contador++;
-
-          wordlist_current->siguiente=(struct words *)malloc(sizeof(struct words));
-          wordlist_current=wordlist_current->siguiente;
-          memset(wordlist_current, 0, sizeof(struct words));
-          muts_current=muts_current->siguiente;
-
-          }
-
-        wordlist_final=wordlist_current;
-        elimina_dupwords(wordlist_base);
-
-        }
-      */
-
-
       // Exceso de eventos repetidos (pasa algo raro)
-
       alert_found++;
 
       if(alert_found>MAX_ALERT) {
@@ -423,7 +376,4 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
     exts_pos++;
 
     } // fin while
-
 }
-
-

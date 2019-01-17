@@ -84,11 +84,11 @@ struct opciones {
   char proxy[STRING_SIZE];
   char pass_string[STRING_SIZE];
   char proxypass_string[STRING_SIZE];
-  char cookie[STRING_SIZE];
-  char url_inicial[STRING_SIZE];
-  char mfile[STRING_SIZE];
-  char agente[STRING_SIZE];
-  char vhost[STRING_SIZE];
+  char *cookie;
+  char *url_inicial;
+  char *mfile;
+  char *agente;
+  char *vhost;
   char savefile[STRING_SIZE];
   char header_string[STRING_SIZE];
 

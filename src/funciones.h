@@ -28,10 +28,10 @@ int get_necs(char *direccion);
 struct result *calcula_nec(char *direccion);
 
 // crea_wordlist.c
-struct words *crea_wordlist(char *ficheros);
+struct words *crea_wordlist(const char *ficheros);
 struct words *crea_wordlist_fich(char *fichero);
 struct words *crea_extslist(char *lista);
-int count_words(struct words *list);
+int count_words(const struct words *list);
 
 // utils.c
 void limpia_url(char *limpia);
@@ -48,7 +48,6 @@ void cierre(void);
 char *code2string(struct code *a, u_int v);
 void init_exts(void);
 char *uri_decode(char *uri);
-int compare_str(char *A, char *B);
 
 // resume.c
 int mkpath(const char *s, mode_t mode);
