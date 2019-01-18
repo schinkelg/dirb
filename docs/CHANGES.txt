@@ -1,7 +1,18 @@
 DIRB CHANGELOG
 ==============
 
-*2.2.2 (05/04/2014)
+*2.2.3 (18/01/2019)
+------
+
+- CLEAN: 	Changed fixed-length c-strings to dynamic length for many variables (wordlist, vhost, cookie etc).
+        	Higher values for STRING_SIZE should no longer be necessary. The application now uses much less
+        	memory.
+- CLEAN:	Optimized the code for modern C (fewer to no compiler warnings on gcc).
+- CLEAN:	Various small improvements.
+- FEATURE:	Standard user agent has been changed to be more modern.
+
+
+2.2.2 (05/04/2014)
 ------
 
 - FEATURE: Añadida wordlist de Jersey
@@ -412,4 +423,3 @@ al calcular la longitud de la pagina HTML recibida.
 - Ampliados y depurados la mayoria de wordlists
 - Añadido TIMEOUT para las peticiones de URLs
 - Añadido fichero changes.txt :)
-

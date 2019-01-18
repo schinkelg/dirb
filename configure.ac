@@ -2,7 +2,7 @@ dnl ++ Starting
 dnl +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 AC_PREREQ(2.50)
-AC_INIT(dirb,2.22,darkraver@open-labs.org)
+AC_INIT(dirb,2.23,darkraver@open-labs.org)
 AC_CONFIG_SRCDIR(src/dirb.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)

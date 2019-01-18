@@ -1,6 +1,7 @@
 *.log
 *.o
 Makefile
+autom4te.cache
 config.h
 config.status
 dirb
