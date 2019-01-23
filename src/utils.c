@@ -53,7 +53,8 @@ void guardadir(char *direccion) {
   IMPRIME("==> DIRECTORY: %s\n", direccion);
   options.recursion_level++;
   if(options.debuging>4) printf("[++++] guardadir() RECURSION_LEVEL: %d\n", options.recursion_level);
-  strncpy(dirlist_final->word, direccion, STRING_SIZE-1);
+  dirlist_final->word = malloc(strlen(direccion) + 1);
+  strcpy(dirlist_final->word, direccion);
   dirlist_final->siguiente=(struct words *)malloc(sizeof(struct words));
   memset(dirlist_final->siguiente, 0, sizeof(struct words));
   dirlist_final=dirlist_final->siguiente;
