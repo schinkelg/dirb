@@ -134,6 +134,7 @@ Books
 Browser
 Business
 C
+CHANGELOG
 CMS
 CPAN
 CVS
@@ -154,6 +155,7 @@ DB
 DMSDump
 Database_Administration
 Default
+Dockerfile
 Documents and Settings
 Download
 Downloads
@@ -195,7 +197,6 @@ Log
 LogFiles
 Login
 Logs
-Lotus_Domino_Admin
 M
 MANIFEST.MF
 META-INF
@@ -388,12 +389,8 @@ academics
 acatalog
 acc
 access
-access-log
-access-log.1
 access.1
-access_db
-access_log
-access_log.1
+access.log
 accessgranted
 accessibility
 accessories
@@ -517,7 +514,6 @@ aggregator
 ajax
 ajax_cron
 akamai
-akeeba.backend.log
 alarm
 alarms
 album
@@ -532,12 +528,6 @@ all-wcprops
 alltime
 alpha
 alt
-alumni
-alumni_add
-alumni_details
-alumni_info
-alumni_reunions
-alumni_update
 am
 amanda
 amazon
@@ -904,6 +894,7 @@ cart
 carthandler
 carts
 cas
+case
 cases
 casestudies
 cash
@@ -1146,11 +1137,8 @@ contact-us
 contact_bean
 contact_us
 contactinfo
-contacto
 contacts
 contactus
-contao
-contato
 contenido
 content
 contents
@@ -1175,12 +1163,10 @@ cool
 copies
 copy
 copyright
-copyright-policy
 corba
 core
 coreg
 corp
-corpo
 corporate
 corporation
 corrections
@@ -1202,6 +1188,7 @@ cpanel
 cpanel_file
 cpath
 cpp
+cpresources
 cps
 cpstyles
 cpw
@@ -1212,7 +1199,6 @@ crashes
 create
 create_account
 createaccount
-createbutton
 creation
 creator
 credit
@@ -1319,11 +1305,6 @@ decrypted
 decryption
 def
 default
-default_icon
-default_image
-default_logo
-default_page
-default_pages
 defaults
 definition
 definitions
@@ -1353,7 +1334,6 @@ details
 deutsch
 dev
 dev2
-dev60cgi
 devel
 develop
 developement
@@ -1380,7 +1360,6 @@ diff
 diffs
 dig
 digest
-digg
 digital
 dir
 dir-login
@@ -1423,8 +1402,6 @@ dms
 dns
 do
 doc
-docebo
-docedit
 dock
 docnote
 docroot
@@ -1583,7 +1560,7 @@ erraddsave
 errata
 error
 error-espanol
-error-log
+error.log
 error404
 error_docs
 error_log
@@ -4409,6 +4386,7 @@ wedding
 week
 weekly
 welcome
+welkom
 well
 wellcome
 werbung
