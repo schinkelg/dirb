@@ -29,12 +29,5 @@
 #define AGENT_STRING  	"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.2)"
 #define MAX_ALERT   	100
 #define STRING_SIZE   	256
-#define DUMP_TIMEOUT  	100
-
-#define DUMP_DIR    	".cache/dirb/resume"
-#define OPTIONS_DUMP  	".cache/dirb/resume/options.dump"
-#define WORDLIST_DUMP 	".cache/dirb/resume/wordlist.dump"
-#define DIRLIST_DUMP  	".cache/dirb/resume/dirlist.dump"
 
 #define DEFAULT_WORDLIST  "/usr/share/dirb/wordlists/common.txt"
-

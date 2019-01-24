@@ -158,8 +158,6 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
     strncpy(options.current_dir, url_base, STRING_SIZE);
     strncpy(options.current_word, tested_word, STRING_SIZE);
 
-    if(descargadas % DUMP_TIMEOUT == 0) dump();
-
 
     // Concatenamos la extension correspondiente
 
@@ -211,8 +209,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
     if(character=='q') {
       if(!options.silent_mode) printf("%*c\r", columns, ' ');
-      IMPRIME("+ Dumping session state and Quitting.\n");
-      dump();
+      IMPRIME("+ Quitting.\n");
       cierre();
       exit(0);
       }

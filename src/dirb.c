@@ -99,11 +99,6 @@ int main(int argc, char *const *argv) {
     exit(-1);
     }
 
-  if(strncmp(argv[1], "-resume", 7)==0) {
-    printf("(!) RESUMING...\n\n");
-    resume();
-    }
-
   options.url_inicial = argv[1];
   //strncpy(options.url_inicial, argv[1], STRING_SIZE-1);
 
@@ -296,18 +291,18 @@ void usage(void) {
   printf("./dirb <url_base> [<wordlist_file(s)>] [options]\n");
 
   printf("\n========================= NOTES =========================\n");
-  printf(" <url_base> : Base URL to scan. (Use -resume for session resuming)\n");
+  printf(" <url_base> : Base URL to scan.\n");
   printf(" <wordlist_file(s)> : List of wordfiles. (wordfile1,wordfile2,wordfile3...)\n");
 
   printf("\n======================== HOTKEYS ========================\n");
   printf(" 'n' -> Go to next directory.\n");
-  printf(" 'q' -> Stop scan. (Saving state for resume)\n");
+  printf(" 'q' -> Stop scan.\n");
   printf(" 'r' -> Remaining scan stats.\n");
 
   printf("\n======================== OPTIONS ========================\n");
   printf(" -a <agent_string> : Specify your custom USER_AGENT.\n");
   printf(" -c <cookie_string> : Set a cookie for the HTTP request.\n");
-  // printf(" -d <debug_level> : Activate DEBUGing.\n");
+  printf(" -d <debug_level> : Activate DEBUGing.\n");
   printf(" -f : Fine tunning of NOT_FOUND (404) detection.\n");
   // printf(" -g : Save found URLs to disk. (Still not implemented)\n")
   printf(" -h <vhost_string> : Use your custom Virtual Host header.\n");
@@ -323,7 +318,6 @@ void usage(void) {
   printf(" -P <proxy_username:proxy_password> : Proxy Authentication.\n");
   printf(" -r : Don't search recursively.\n");
   printf(" -R : Interactive recursion. (Asks for each directory)\n");
-  // printf(" -s : Verify the validity of the peer's SSL certificate.\n");
   printf(" -S : Silent Mode. Don't show tested words. (For dumb terminals)\n");
   printf(" -t : Don't force an ending '/' on URLs.\n");
   printf(" -u <username:password> : HTTP Authentication.\n");
@@ -337,5 +331,4 @@ void usage(void) {
   printf(" ./dirb http://url/ -X .html (Test files with '.html' extension)\n");
   printf(" ./dirb http://url/ /usr/share/dirb/wordlists/vulns/apache.txt (Test with apache.txt wordlist)\n");
   printf(" ./dirb https://secure_url/ (Simple Test with SSL)\n");
-
 }

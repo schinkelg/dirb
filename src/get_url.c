@@ -56,7 +56,6 @@ retry:
       if(!options.silent_mode) printf("                                                                               \r");
       IMPRIME("\n(!) FATAL: Too many errors connecting to host\n");
       IMPRIME("    (Possible cause: %s)\n", error2message[estructura.estado].desc);
-      dump();
       cierre();
       exit(-1);
       }

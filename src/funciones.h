@@ -48,8 +48,3 @@ void cierre(void);
 char *code2string(struct code *a, u_int v);
 void init_exts(void);
 char *uri_decode(char *uri);
-
-// resume.c
-int mkpath(const char *s, mode_t mode);
-void dump(void);
-void resume(void);

@@ -2,11 +2,14 @@
 *.o
 Makefile
 autom4te.cache
+build
 config.h
+config.h.meson
 config.status
 dirb
 gendict
 gendict_src/.deps/
+meson.build
 src/.deps/
 stamp-h1
 web2dic/.deps/
