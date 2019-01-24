@@ -1,15 +1,6 @@
 *.log
 *.o
-Makefile
-autom4te.cache
 build
 config.h
 config.h.meson
-config.status
-dirb
-gendict
-gendict_src/.deps/
 src/.deps/
-stamp-h1
-web2dic/.deps/
-web2dic/html2dic
