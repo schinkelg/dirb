@@ -38,12 +38,12 @@ designed for helping in web vulnerability assessment.
 
 ## Installation
 
-DIRB is based on libcurl so you need to install this library where autoconf 
+DIRB is based on libcurl so you need to install this library where meson
 can locate it. Once libcurl is installed properly you must only do:
 
-	$ ./configure
-	$ make
-
+ $ meson build
+ $ ninja -C build
+ $ sudo ninja -C build
 
 ## Usage
 
