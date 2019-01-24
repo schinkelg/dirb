@@ -270,14 +270,8 @@ int main(int argc, char *const *argv) {
  */
 
 void banner(void) {
-
+  printf("dirb v"VERSION"    \n");
   printf("\n");
-  printf("-----------------\n");
-  printf("DIRB v"VERSION"    \n");
-  printf("By The Dark Raver\n");
-  printf("-----------------\n");
-  printf("\n");
-
 }
 
 
@@ -288,30 +282,21 @@ void banner(void) {
 
 void usage(void) {
 
-  printf("./dirb <url_base> [<wordlist_file(s)>] [options]\n");
+  printf("Usage: dirb <url_base> [<wordlist_file(s)>] [options]\n");
 
-  printf("\n========================= NOTES =========================\n");
   printf(" <url_base> : Base URL to scan.\n");
   printf(" <wordlist_file(s)> : List of wordfiles. (wordfile1,wordfile2,wordfile3...)\n");
 
-  printf("\n======================== HOTKEYS ========================\n");
-  printf(" 'n' -> Go to next directory.\n");
-  printf(" 'q' -> Stop scan.\n");
-  printf(" 'r' -> Remaining scan stats.\n");
-
-  printf("\n======================== OPTIONS ========================\n");
+  printf("\nOPTIONS\n");
   printf(" -a <agent_string> : Specify your custom USER_AGENT.\n");
   printf(" -c <cookie_string> : Set a cookie for the HTTP request.\n");
   printf(" -d <debug_level> : Activate DEBUGing.\n");
   printf(" -f : Fine tunning of NOT_FOUND (404) detection.\n");
-  // printf(" -g : Save found URLs to disk. (Still not implemented)\n")
   printf(" -h <vhost_string> : Use your custom Virtual Host header.\n");
   printf(" -H <header_string> : Add a custom header to the HTTP request.\n");
   printf(" -i : Use case-insensitive search.\n");
   printf(" -j : Use port to connect to.\n");
   printf(" -l : Print \"Location\" header when found.\n");
-  // printf(" -M <mutations> / -m <muts_file> : Mutate found URLs with this extensions.\n");
-  // printf(" -n <url>: Use the response for this URL as NEC.\n");
   printf(" -N <nf_code>: Ignore responses with this HTTP code.\n");
   printf(" -o <output_file> : Save output to disk.\n");
   printf(" -p <proxy[:port]> : Use this proxy. (Default port is 1080)\n");
@@ -326,7 +311,7 @@ void usage(void) {
   printf(" -X <extensions> / -x <exts_file> : Append each word with this extensions.\n");
   printf(" -z <milisecs> : Add a miliseconds delay to not cause excessive Flood.\n");
 
-  printf("\n======================== EXAMPLES =======================\n");
+  printf("\nEXAMPLES\n");
   printf(" ./dirb http://url/directory/ (Simple Test)\n");
   printf(" ./dirb http://url/ -X .html (Test files with '.html' extension)\n");
   printf(" ./dirb http://url/ /usr/share/dirb/wordlists/vulns/apache.txt (Test with apache.txt wordlist)\n");
