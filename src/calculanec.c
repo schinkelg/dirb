@@ -29,7 +29,7 @@ int get_necs(const char *direccion) {
 
     nec[exts_pos]=calcula_nec(direccion);
 
-    if(options.debuging>1) printf("[+] calcula_nec() NEC[%s]: %d -> %s\n", exts_current->word, nec[exts_pos]->codigo_http, code2string(code2message, nec[exts_pos]->codigo_http));
+    //if(options.debuging>1) printf("[+] calcula_nec() NEC[%s]: %d -> %s\n", exts_current->word, nec[exts_pos]->codigo_http, code2string(code2message, nec[exts_pos]->codigo_http));
 
     if(options.debuging>1) printf("[+] calcula_nec() (Size: %d - Location: '%s')\n", nec[exts_pos]->body_size, nec[exts_pos]->location);
 
@@ -74,11 +74,11 @@ struct result *calcula_nec(const char *direccion) {
   // Calculo del primer NEC
   length = strlen(random_base_url1)+strlen(exts_current->word)+1;
   rand_url1 = malloc(length);
-  snprintf(rand_url1, length-1, "%s%s", random_base_url1, exts_current->word);
+  snprintf(rand_url1, length, "%s%s", random_base_url1, exts_current->word);
 
   length = strlen(direccion)+strlen(rand_url1)+1;
   url = malloc(length);
-  snprintf(url, length-1, "%s%s", direccion, rand_url1);
+  snprintf(url, length, "%s%s", direccion, rand_url1);
 
   nec1=get_url(url);
   free(url);
@@ -109,11 +109,11 @@ struct result *calcula_nec(const char *direccion) {
   // Calculo del segundo NEC
   length = strlen(random_base_url2)+strlen(exts_current->word)+1;
   rand_url2 = malloc(length);
-  snprintf(rand_url2, length-1, "%s%s", random_base_url2, exts_current->word);
+  snprintf(rand_url2, length, "%s%s", random_base_url2, exts_current->word);
 
   length = strlen(direccion)+strlen(rand_url2)+1;
   url = malloc(length);
-  snprintf(url, length-1, "%s%s", direccion, rand_url2);
+  snprintf(url, length, "%s%s", direccion, rand_url2);
 
   nec1=get_url(url);
   nec2=get_url(url);
