@@ -22,6 +22,7 @@ struct words *crea_wordlist(const char *filenames) {
   char *apunt;
   char *consumable;
 
+
   // Inicializamos
   consumable = malloc(strlen(filenames)+1);
   strcpy(consumable, filenames);
@@ -35,7 +36,7 @@ struct words *crea_wordlist(const char *filenames) {
   wordlist_base=current;
   contador=0;
 
-  if(!options.silent_mode) printf("*** Generating Wordlist...\r");
+  if(!options.silent_mode) printf("*** Generating Wordlist...\n");
   fflush(stdout);
 
 
@@ -46,13 +47,15 @@ struct words *crea_wordlist(const char *filenames) {
     // Separamos la lista de ficheros
 
     strncpy(current_file, consumable, STRING_SIZE-1);
-
+    printf("crea_wordlist: %s\n", current_file);
     apunt=(char *)strchr(current_file, ',');
 
-    if(apunt!=0) *apunt='\0';
-
-    consumable=consumable+strlen(current_file)+1;
-
+    if(apunt!=0) {
+      *apunt='\0';
+      consumable=consumable+strlen(current_file)+1;
+    } else {
+      consumable = "";
+    }
     // Abrimos el fichero
 
     if((file=fopen(current_file, "r"))==0) {

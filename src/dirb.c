@@ -100,8 +100,17 @@ int main(int argc, char *const *argv) {
     }
 
   options.url_inicial = argv[1];
-  //strncpy(options.url_inicial, argv[1], STRING_SIZE-1);
 
+  // Does the URL end with a forward slash?
+  if (argv[1][strlen(argv[1])-1] != '/') {
+    options.url_inicial = malloc(strlen(argv[1]+2));
+    strcpy(options.url_inicial, argv[1]);
+    strcat(options.url_inicial, "/");
+
+  } else {
+    options.url_inicial = argv[1];
+  }
+  printf(options.url_inicial);
   if(argc==2 || strncmp(argv[2], "-", 1)==0) {
     options.mfile = DEFAULT_WORDLIST;
     optind+=1;

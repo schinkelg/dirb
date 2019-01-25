@@ -247,24 +247,25 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         alert=0;
 
         strncpy(location_temp, tested_estruct.location, STRING_SIZE);
-        if(options.finetunning==1) location_clean(location_temp+strcmp(location_temp, nec[exts_pos]->location), tested_word);
+        if(options.finetunning==1) location_clean(location_temp, tested_word);
 
         if(options.debuging>3) printf("[+++] lanza_ataque() Location: '%s'\n", location_temp);
-
-        if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http && (strncasecmp(location_temp, nec[exts_pos]->location, STRING_SIZE-1)==0)) {
+        //printf("location_temp: %s\n", location_temp);
+        //printf("nec[exts_pos]->location: %s\n",nec[exts_pos]->location);
+        //printf("tested_estruct.codigo_http %d", tested_estruct.codigo_http);
+        //printf("nec[exts_pos]->codigo_http %d", nec[exts_pos]->codigo_http);
+        if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http && (strcmp(location_temp, nec[exts_pos]->location)==0)) {
           existant=0;
-          } else {
+        } else {
           existant=1;
-
           // Comprobamos si es un directorio
           strcpy(tested_url2, tested_estruct.url);
           barra(tested_url2);
 
-          if(options.debuging>3) printf("[+++] lanza_ataque() Direcroty_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
+          if(options.debuging>3) printf("[+++] lanza_ataque() Directory_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
 
           if(location_cmp(tested_estruct.location, tested_url2)==0) guardadir(tested_url2);
-
-          }
+        }
 
         break;
 

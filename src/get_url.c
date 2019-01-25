@@ -37,7 +37,6 @@ retry:
   estructura.body_lines=0;
   estructura.head_lines=1;
   estructura.estado=-1;
-
   curl_easy_setopt(curl, CURLOPT_URL, resp_url);
   
 

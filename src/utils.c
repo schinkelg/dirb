@@ -27,7 +27,7 @@ void limpia_url(char *limpia) {
 
 
 /*
- * BARRA: Añade una barra (/) al final de una cadena si no la tiene
+ * BARRA: AÃ±ade una barra (/) al final de una cadena si no la tiene
  *
  */
 
@@ -185,46 +185,34 @@ int location_cmp(char *A, char *B) {
  */
 
 void location_clean(char *cleaned, char *toelim) {
-  char *ptr=0, *ptr2=0;
+  char *ptr=0;
   char *A=cleaned;
-  int remain;
-  char tmpstr[STRING_SIZE];
 
   if(options.debuging>3) printf("[+++] location_clean() TOCLEAN: %s | TOELIM: %s\n", cleaned, toelim);
 
   // Jump to uri-path
   if(strncmp(A, "http://", 7)==0 || strncmp(A, "https://", 8)==0) {
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A=ptr+1;
+    if(ptr!=0) A++;
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A=ptr+1;
+    if(ptr!=0) A++;
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A=ptr+1;
-    }
+    if(ptr!=0) A++;
+  }
 
-  // Remove session
-  ptr=(char *)strchr(A, ';');
-  if(ptr!=0) {
-	ptr2=(char *)strchr(ptr, '?');
-	if(ptr2==0) ptr2=cleaned+strlen(cleaned);
-    remain=cleaned+strlen(cleaned)-ptr2;
-	strncpy(tmpstr, ptr2, remain);
-	strncpy(ptr, tmpstr, remain);
-    memset(ptr+remain, 0, 1);
-    }
+  // Remove arguments
+  ptr= strchr(A, '?');
+  if (0 != ptr) {
+    *ptr = 0;
+  }
 
   // Remove string
-  ptr=(char *)strstr(A, toelim);
-  if(ptr!=0) {
-    ptr2=ptr+strlen(toelim);
-	remain=cleaned+strlen(cleaned)-ptr2;
-    strncpy(tmpstr, ptr2, remain);
-    strncpy(ptr, tmpstr, remain);
-    memset(ptr+remain, 0, 1);
-    }
+  ptr= strstr(A, toelim);
+  if (0 != ptr) {
+    *ptr = 0;
+  }
 
   if(options.debuging>3) printf("[+++] location_clean() CLEANED: %s\n", cleaned);
-
 }
 
 
@@ -316,9 +304,6 @@ void cierre(void) {
   IMPRIME("DOWNLOADED: %d - FOUND: %d\n", descargadas, encontradas);
 
   if(options.saveoutput) fclose(outfile);
-
-  //curl_easy_cleanup(curl); // Segfaults on last cygwin :?
-
 }
 
 

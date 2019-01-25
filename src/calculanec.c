@@ -115,11 +115,10 @@ struct result *calcula_nec(const char *direccion) {
   url = malloc(length);
   snprintf(url, length, "%s%s", direccion, rand_url2);
 
-  nec1=get_url(url);
   nec2=get_url(url);
   free(url);
 
-  if(options.debuging>2) printf("[++] calcula_nec() NEC2: %d\n", nec2.codigo_http);
+  if(options.debuging>2) printf("[++] calcula_nec() NEC2: %d - %d\n", nec2.codigo_http, nec2.body_size);
 
   // Comparamos
   if(nec1.codigo_http==nec2.codigo_http) {
@@ -145,8 +144,9 @@ struct result *calcula_nec(const char *direccion) {
           }
 
         if(strncmp(nec1.location, nec2.location, STRING_SIZE-1)!=0) {
-          IMPRIME("(!) WARNING: NOT_FOUND[%s] not stable, unable to determine correct URLs {30X}.\n", exts_current->word);
-          IMPRIME("    (Try using FineTunning: '-f')\n");
+          printf("(!) WARNING: NOT_FOUND[%s] not stable, unable to determine correct URLs {30X}.\n", exts_current->word);
+          printf("Not equal: %s and %s\n", nec1.location, nec2.location);
+          if(options.finetunning!=1) printf("    (Try using FineTunning: '-f')\n");
           if(options.exitonwarn) { next_dir=1; }
           } else {
           strncpy(mynec->location, nec1.location, STRING_SIZE);
@@ -167,6 +167,7 @@ struct result *calcula_nec(const char *direccion) {
 
   free(rand_url2);
   mynec->codigo_http=nec1.codigo_http;
+  mynec->body_size=nec1.body_size;
   strncpy(mynec->server, nec1.server, STRING_SIZE);
 
   if(options.debuging>2) printf("[++] calcula_nec() NEC: %d - %d\n", mynec->codigo_http, mynec->body_size);
