@@ -37,13 +37,4 @@ struct words *dirlist_base;       // Base de la lista de los directorios encontr
 struct words *dirlist_final;      // Final de la lista los directorios encontrados
 struct words *dirlist_current;    // Nodo actual de la lista los directorios encontrados
 
-int resuming;                     // Flag para saber si estamos en una sesion resumida
-int next_dir;					  // Flag para saber si tenemos que pasar al siguiente directorio
-
-
-
-
-
-
-
-
+int next_dir;					  // Flag para saber si tenemos que pasar al next directorio

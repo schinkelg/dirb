@@ -13,7 +13,7 @@
 // Resultado de una peticion
 
 struct result {
-  char url[STRING_SIZE];
+  char *url;
   CURLcode estado;
   int codigo_http;
   int head_size;
@@ -21,8 +21,8 @@ struct result {
   int body_size;
   int body_words;
   int body_lines;
-  char location[STRING_SIZE];
-  char server[STRING_SIZE];
+  char location[256];
+  char server[256];
 };
 
 
@@ -30,7 +30,7 @@ struct result {
 
 struct code {
   unsigned int codenum;
-  char desc[STRING_SIZE];
+  char *desc;
 };
 
 
@@ -39,7 +39,7 @@ struct code {
 struct words {
   void *anterior;
   char *word;
-  void *siguiente;
+  void *next;
 };
 
 
@@ -55,7 +55,7 @@ struct opciones {
   int use_agent;
   int ignore_nec;
   int default_nec;
-  int debuging;
+  int debug_level;
   int exitonwarn;
   int save_found;
   int mutations_file;
@@ -65,7 +65,7 @@ struct opciones {
   int saveoutput;
   int print_location;
   int port;
-  int finetunning;
+  int finetuning;
   int interactive;
   int nothide;
   int insensitive;
@@ -77,26 +77,26 @@ struct opciones {
 
   /* Parametros de linea de comandos */
 
-  char mutation_file[STRING_SIZE];
-  char mutation_list[STRING_SIZE];
-  char exts_file[STRING_SIZE];
-  char exts_list[STRING_SIZE];
-  char proxy[STRING_SIZE];
-  char pass_string[STRING_SIZE];
-  char proxypass_string[STRING_SIZE];
+  char *mutation_file;
+  char *mutation_list;
+  char *exts_file;
+  char *exts_list;
+  char *proxy;
+  char *pass_string;
+  char *proxypass_string;
   char *cookie;
   char *url_inicial;
   char *mfile;
   char *agente;
   char *vhost;
-  char savefile[STRING_SIZE];
-  char header_string[STRING_SIZE];
+  char *savefile;
+  char *header_string;
 
   /* Parametros para resume */
 
   int recursion_level;
-  char current_word[STRING_SIZE];
-  char current_dir[STRING_SIZE];
+  char *current_word;
+  char *current_dir;
 };
 
 

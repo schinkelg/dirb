@@ -14,7 +14,7 @@ void usage(void);
 
 // get_url.c
 struct result get_url(char *resp_url);
-size_t get_header(void *ptr, size_t size, size_t nmemb);
+size_t get_header(char *ptr, size_t size, size_t nmemb);
 size_t get_body(void *ptr, size_t size, size_t nmemb);
 
 // lanza_ataque.c
@@ -47,4 +47,3 @@ char kbhit(void);
 void cierre(void);
 char *code2string(struct code *a, u_int v);
 void init_exts(void);
-char *uri_decode(char *uri);

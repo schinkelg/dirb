@@ -15,27 +15,26 @@
  */
 
 void lanza_ataque(char *inicio, struct words *wordlist) {
-  char tested_word[STRING_SIZE];
-  char tested_url[STRING_SIZE];
-  char tested_url2[STRING_SIZE];
-  struct result tested_estruct;
+  char *location_temp = 0;
+  char *tested_url2 = 0;
+  char *tested_url = 0;
+  char *tested_word = 0;
+  char *url_base = 0;
+  int alert = 0;
+  int alert_found = 0;
+  int character = 0;
+  int columns = 0;
+  int exts_pos = 0;
   struct result tested_estruct2;
-  int alert_found;
-  int alert;
-  char location_temp[STRING_SIZE];
-  char url_base[STRING_SIZE];
-  int character;
-  int exts_pos;
+  struct result tested_estruct;
   struct winsize ws;
-  int columns;
 
   // Inicializamos
-
   if(ioctl(0,TIOCGWINSZ,&ws)!=0) {
     columns=79;
     } else {
 	columns=ws.ws_col-1;
-	if(options.debuging>2) printf("[++] lanza_ataque() COLUMNS: %d\n", columns);
+	if(options.debug_level>2) printf("[++] lanza_ataque() COLUMNS: %d\n", columns);
 	}
 
   next_dir=0;
@@ -45,6 +44,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
   exts_current=exts_base;
   exts_pos=0;
 
+  url_base = malloc(strlen(inicio)+1);
   strcpy(url_base, inicio);
   character=0;
 
@@ -56,18 +56,19 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
   /////////////////////////////////////////////////////////////////////////////
 
   while(1) {
-
     // Inicializamos cada bucle
     memset(&tested_estruct, 0, sizeof(struct result));
+    memset(&tested_estruct2, 0, sizeof(struct result));
+    
     existant=1;
     fflush(outfile);
 
 
     // Comprobamos si hay que dar otra vuelta
 
-    if(options.debuging>3) printf("[+++] lanza_ataque() BUCLE1: %s - %d\n", (char *)wordlist->siguiente, next_dir);
+    if(options.debug_level>3) printf("[+++] lanza_ataque() BUCLE1: %s - %d\n", (char *)wordlist->next, next_dir);
 
-    if(wordlist->siguiente==0 || next_dir) {
+    if(wordlist->next==0 || next_dir) {
 
       // Entramos en un directorio
 
@@ -76,8 +77,8 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         alert=0;
         alert_found=0;
 
-        if(options.debuging>2) printf("[++] lanza_ataque() RECURSE: %d\n", options.recursion_level);
-
+        if(options.debug_level>2) printf("[++] lanza_ataque() RECURSE: %d\n", options.recursion_level);
+        url_base = malloc(strlen(dirlist_current->word)+1);
         strcpy(url_base, dirlist_current->word);
         limpia_url(url_base);
 
@@ -87,7 +88,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         get_necs(url_base);
         wordlist=wordlist_base;
         options.recursion_level--;
-        dirlist_current=dirlist_current->siguiente;
+        dirlist_current=dirlist_current->next;
 
 
         // Pruebas de directorio
@@ -111,7 +112,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
           fflush(stdout);
           character=' ';
           while(character!='n' && character!='y') character=kbhit();
-          if(options.debuging>4) printf("[++++] lanza_ataque() CHAR: %d\n", character);
+          if(options.debug_level>4) printf("[++++] lanza_ataque() CHAR: %d\n", character);
           if(character=='n') {
             printf("\nSkipping directory.\n");
             next_dir=1;
@@ -125,7 +126,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
         } else {
 
-          if(options.debuging>4) printf("[++++] lanza_ataque() Se acabo la wordlist\n");
+          if(options.debug_level>4) printf("[++++] lanza_ataque() Se acabo la wordlist\n");
           break;
 
         } // Fin pruebas directorio
@@ -141,38 +142,33 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
     if(exts_pos>=exts_num) {
       exts_current=exts_base;
       exts_pos=0;
-      wordlist=wordlist->siguiente;
+      wordlist=wordlist->next;
       }
 
-    strncpy(tested_word, wordlist->word, STRING_SIZE-1);
+    if (tested_word) free(tested_word);
+    tested_word = malloc(strlen(wordlist->word) + strlen(exts_current->word)+1);
+    strcpy(tested_word, wordlist->word);
     limpia_url(tested_word);
 
     if(strlen(tested_word)==0) {
-      if(options.debuging>4) printf("[++++] lanza_ataque() VACIO\n");
+      if(options.debug_level>4) printf("[++++] lanza_ataque() VACIO\n");
       continue;
       }
 
-
-    // Inicializamos resume
-
-    strncpy(options.current_dir, url_base, STRING_SIZE);
-    strncpy(options.current_word, tested_word, STRING_SIZE);
-
-
     // Concatenamos la extension correspondiente
 
-    strncat(tested_word, exts_current->word, STRING_SIZE-strlen(tested_word));
+    strcat(tested_word, exts_current->word);
 
-    exts_current=exts_current->siguiente;
+    exts_current=exts_current->next;
 
-    if(options.debuging>3) if(!options.silent_mode) printf("%*c\r", columns, ' ');
-    if(options.debuging>3) printf("[+++] lanza_ataque() PALABRA: %s\n", tested_word);
+    if(options.debug_level>3) if(!options.silent_mode) printf("%*c\r", columns, ' ');
+    if(options.debug_level>3) printf("[+++] lanza_ataque() PALABRA: %s\n", tested_word);
 
 
     // Generamos la URL y la limpiamos
-
-    strncpy(tested_url, url_base, STRING_SIZE);
-    strncat(tested_url, tested_word, STRING_SIZE-strlen(tested_url));
+    tested_url = malloc(strlen(url_base)+strlen(tested_word)+1);
+    strcpy(tested_url, url_base);
+    strcat(tested_url, tested_word);
     limpia_url(tested_word);
 
 
@@ -185,7 +181,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
     // Mostramos los resultados
 
-    if(options.debuging>3) printf("[+++] lanza_ataque() ESTADO: %d\n", tested_estruct.estado);
+    if(options.debug_level>3) printf("[+++] lanza_ataque() ESTADO: %d\n", tested_estruct.estado);
 
     descargadas++;
     if(!options.silent_mode) printf("%*c\r", columns, ' ');
@@ -222,22 +218,19 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       IMPRIME("Words: %d | Directories: %d\n", count_words(wordlist) * exts_num, count_words(dirlist_current));
       }
 
-
     // Analisis del codigo devuelto
-    ///////////////////////////////////////////////////////////////////////////
-
     switch(tested_estruct.codigo_http) {
 
       case 200:
         alert=0;
 
-        if(options.finetunning==1) tested_estruct.body_size=tested_estruct.body_words;
+        if(options.finetuning==1) tested_estruct.body_size=tested_estruct.body_words;
 
         if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http && tested_estruct.body_size==nec[exts_pos]->body_size) {
           existant=0;
           } else {
 		  existant=1;
-          if(options.debuging>3) printf("[+++] lanza_ataque() 200: %d - %d\n", nec[exts_pos]->body_size, tested_estruct.body_size);
+          if(options.debug_level>3) printf("[+++] lanza_ataque() 200: %d - %d\n", nec[exts_pos]->body_size, tested_estruct.body_size);
           }
 
         break;
@@ -245,24 +238,22 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       case 301:
       case 302:
         alert=0;
+        location_temp = malloc(strlen(tested_estruct.location)+1);
+        strcpy(location_temp, tested_estruct.location);
+        if(options.finetuning==1) location_clean(location_temp, tested_word);
 
-        strncpy(location_temp, tested_estruct.location, STRING_SIZE);
-        if(options.finetunning==1) location_clean(location_temp, tested_word);
-
-        if(options.debuging>3) printf("[+++] lanza_ataque() Location: '%s'\n", location_temp);
-        //printf("location_temp: %s\n", location_temp);
-        //printf("nec[exts_pos]->location: %s\n",nec[exts_pos]->location);
-        //printf("tested_estruct.codigo_http %d", tested_estruct.codigo_http);
-        //printf("nec[exts_pos]->codigo_http %d", nec[exts_pos]->codigo_http);
+        if(options.debug_level>3) printf("[+++] lanza_ataque() Location: '%s'\n", location_temp);
         if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http && (strcmp(location_temp, nec[exts_pos]->location)==0)) {
           existant=0;
         } else {
           existant=1;
-          // Comprobamos si es un directorio
+          // test for directory
+          // one extra for slash from barra()
+          tested_url2 = malloc(strlen(tested_estruct.url)+2);
           strcpy(tested_url2, tested_estruct.url);
           barra(tested_url2);
 
-          if(options.debuging>3) printf("[+++] lanza_ataque() Directory_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
+          if(options.debug_level>3) printf("[+++] lanza_ataque() Directory_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
 
           if(location_cmp(tested_estruct.location, tested_url2)==0) guardadir(tested_url2);
         }
@@ -284,9 +275,9 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
             alert=0;
             }
           }
-
+        tested_url2 = malloc(strlen(tested_estruct.url)+3);
         strcpy(tested_url2, tested_estruct.url);
-        memset(&tested_estruct2, 0, sizeof(struct result));
+        
 
         if(strncmp(tested_url2+strlen(tested_url2)-1, "\x2f", 1)==0) {
           memcpy(tested_url2+strlen(tested_url2)-1, "_\x00", 2);
@@ -298,7 +289,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
         tested_estruct2=get_url(tested_url2);
 
-        if(options.debuging>3) printf("[+++] lanza_ataque() tested_url2: %d\n", tested_estruct2.codigo_http);
+        if(options.debug_level>3) printf("[+++] lanza_ataque() tested_url2: %d\n", tested_estruct2.codigo_http);
 
         if(tested_estruct2.codigo_http==tested_estruct.codigo_http || tested_estruct.codigo_http==nec[exts_pos]->codigo_http) {
           existant=0;
@@ -311,17 +302,16 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       default:
         alert=0;
 
-        if(options.finetunning==1) tested_estruct.body_size=tested_estruct.body_words;
+        if(options.finetuning==1) tested_estruct.body_size=tested_estruct.body_words;
 
         if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http) {
           existant=0;
-          if(options.finetunning==1 && tested_estruct.body_size!=nec[exts_pos]->body_size) existant=1;
+          if(options.finetuning==1 && tested_estruct.body_size!=nec[exts_pos]->body_size) existant=1;
           } else {
           existant=1;
           }
 
       break;
-
     }
 
 
@@ -368,10 +358,9 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
           IMPRIME("    (Location: '%s')\n", tested_estruct.location);
           }
         }
-
       }
 
     exts_pos++;
-
+    free(tested_url);
     } // fin while
 }

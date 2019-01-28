@@ -21,7 +21,6 @@ int main(int argc, char *const *argv) {
   banner();
 
   // Inicializaciones globales
-
   memset(&options, 0, sizeof(struct opciones));
 
   options.exitonwarn=1;
@@ -103,7 +102,7 @@ int main(int argc, char *const *argv) {
 
   // Does the URL end with a forward slash?
   if (argv[1][strlen(argv[1])-1] != '/') {
-    options.url_inicial = malloc(strlen(argv[1]+2));
+    options.url_inicial = malloc(strlen(argv[1])+2);
     strcpy(options.url_inicial, argv[1]);
     strcat(options.url_inicial, "/");
 
@@ -132,10 +131,10 @@ int main(int argc, char *const *argv) {
         strcpy(options.cookie, optarg);
         break;
       case 'd':
-        options.debuging=atoi(optarg);
+        options.debug_level=atoi(optarg);
         break;
       case 'f':
-        options.finetunning=1;
+        options.finetuning=1;
         break;
       case 'g':
         options.save_found=1;
@@ -147,10 +146,15 @@ int main(int argc, char *const *argv) {
         break;
       case 'H':
         if(options.add_header) {
-          strcat(options.header_string, "\n");
-          strncat(options.header_string, optarg, STRING_SIZE-strlen(options.header_string)-2);
-          } else {
-  	      strncpy(options.header_string, optarg, STRING_SIZE-1);
+          char * tmp = malloc(strlen(options.header_string) + strlen(optarg) + 2);
+          strcpy(tmp, options.header_string);
+          strcat(tmp, "\n");
+          strcat(tmp, optarg);
+          free(options.header_string);
+          options.header_string = tmp;
+        } else {
+          options.header_string = malloc(strlen(optarg)+1);
+  	      strcpy(options.header_string, optarg);
 	      }
         options.add_header++;
         break;
@@ -165,26 +169,31 @@ int main(int argc, char *const *argv) {
         break;
       case 'm':
         options.mutations_file=1;
-        strncpy(options.mutation_file, optarg, STRING_SIZE-1);
+        options.mutation_file = malloc(strlen(optarg)+1);
+        strcpy(options.mutation_file, optarg);
         break;
       case 'M':
         options.mutations_list=1;
-        strncpy(options.mutation_list, optarg, STRING_SIZE-1);
+        options.mutation_list = malloc(strlen(optarg)+1);
+        strcpy(options.mutation_list, optarg);
         break;
       case 'N':
         options.ignore_nec=atoi(optarg);
         break;
       case 'o':
         options.saveoutput=1;
-        strncpy(options.savefile, optarg, STRING_SIZE-1);
+        options.savefile = malloc(strlen(optarg)+1);
+        strcpy(options.savefile, optarg);
         break;
       case 'p':
         options.use_proxy=1;
-        strncpy(options.proxy, optarg, STRING_SIZE-1);
+        options.proxy = malloc(strlen(optarg)+1);
+        strcpy(options.proxy, optarg);
         break;
       case 'P':
         options.use_proxypass=1;
-        strncpy(options.proxypass_string, optarg, STRING_SIZE-1);
+        options.proxypass_string = malloc(strlen(optarg)+1);
+        strcpy(options.proxypass_string, optarg);
         break;
       case 'r':
         options.dont_recurse=1;
@@ -203,7 +212,8 @@ int main(int argc, char *const *argv) {
         break;
       case 'u':
         options.use_pass=1;
-        strncpy(options.pass_string, optarg, STRING_SIZE-1);
+        options.pass_string = malloc(strlen(optarg)+1);
+        strcpy(options.pass_string, optarg);
         break;
       case 'v':
         options.nothide=1;
@@ -213,11 +223,13 @@ int main(int argc, char *const *argv) {
         break;
       case 'x':
         options.extensions_file=1;
-        strncpy(options.exts_file, optarg, STRING_SIZE-1);
+        options.exts_file = malloc(strlen(optarg)+1);
+        strcpy(options.exts_file, optarg);
         break;
       case 'X':
         options.extensions_list=1;
-        strncpy(options.exts_list, optarg, STRING_SIZE-1);
+        options.exts_list = malloc(strlen(optarg)+1);
+        strcpy(options.exts_list, optarg);
         break;
       case 'z':
         options.speed=(atoi(optarg)<=0)?0:atoi(optarg);
@@ -228,16 +240,6 @@ int main(int argc, char *const *argv) {
         break;
         }
       }
-
-  // Limpia el input
-
-  //limpia_url(options.url_inicial);
-
-  //if(options.lasting_bar && !strchr(options.url_inicial, '?')) barra(options.url_inicial);
-
-  //check_url(options.url_inicial);
-
-  //limpia_url(options.mfile);
 
   // Chequeos iniciales
 

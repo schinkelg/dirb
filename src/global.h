@@ -28,6 +28,5 @@
 #define BIGWORDLIST   	100000
 #define AGENT_STRING  	"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.2)"
 #define MAX_ALERT   	100
-#define STRING_SIZE   	256
 
 #define DEFAULT_WORDLIST  "/usr/share/dirb/wordlists/common.txt"

@@ -32,7 +32,6 @@ void get_options(void) {
     fprintf(outfile, "By The Dark Raver\n");
     fprintf(outfile, "-----------------\n");
     fprintf(outfile, "\n");
-    if(resuming) { resuming=0; fprintf(outfile, "(!) RESUMING...\n\n"); }
     fprintf(outfile, "OUTPUT_FILE: %s\n", options.savefile);
     }
 
@@ -54,13 +53,13 @@ void get_options(void) {
 
   // -d
 
-  if(options.debuging) {
-    IMPRIME("DEBUG_LEVEL: %d\n", options.debuging);
+  if(options.debug_level) {
+    IMPRIME("DEBUG_LEVEL: %d\n", options.debug_level);
     }
 
   // -f
 
-  if(options.finetunning==1) {
+  if(options.finetuning==1) {
     IMPRIME("OPTION: Fine tunning of NOT_FOUND detection\n");
     }
 
@@ -109,9 +108,9 @@ void get_options(void) {
 
     s_current=crea_wordlist_fich(options.mutation_file);
 
-    while(s_current->siguiente!=0) {
+    while(s_current->next!=0) {
       IMPRIME("(%s)", s_current->word);
-      s_current=s_current->siguiente;
+      s_current=s_current->next;
       }
 
     IMPRIME("\n");
@@ -126,9 +125,9 @@ void get_options(void) {
 
     s_current=crea_extslist(options.mutation_list);
 
-    while(s_current->siguiente!=0) {
+    while(s_current->next!=0) {
       IMPRIME("(%s)", s_current->word);
-      s_current=s_current->siguiente;
+      s_current=s_current->next;
       }
 
     IMPRIME("\n");
@@ -210,9 +209,9 @@ void get_options(void) {
     exts_base=crea_wordlist_fich(options.exts_file);
     exts_current=exts_base;
 
-    while(exts_current->siguiente!=0) {
+    while(exts_current->next!=0) {
       IMPRIME("(%s)", exts_current->word);
-      exts_current=exts_current->siguiente;
+      exts_current=exts_current->next;
       exts_num++;
       }
 
@@ -229,9 +228,9 @@ void get_options(void) {
     exts_base=crea_extslist(options.exts_list);
     exts_current=exts_base;
 
-    while(exts_current->siguiente!=0) {
+    while(exts_current->next!=0) {
       IMPRIME("(%s)", exts_current->word);
-      exts_current=exts_current->siguiente;
+      exts_current=exts_current->next;
       exts_num++;
       }
 

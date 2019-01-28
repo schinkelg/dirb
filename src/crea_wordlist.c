@@ -17,8 +17,8 @@
 struct words *crea_wordlist(const char *filenames) {
   FILE *file;
   struct words *current;
-  char cbuffer[STRING_SIZE];
-  char current_file[STRING_SIZE];
+  char cbuffer[256];
+  char *current_file;
   char *apunt;
   char *consumable;
 
@@ -41,12 +41,11 @@ struct words *crea_wordlist(const char *filenames) {
 
 
   // Bucle de generacion de wordlist
-
   while(strlen(consumable)) {
 
     // Separamos la lista de ficheros
-
-    strncpy(current_file, consumable, STRING_SIZE-1);
+    current_file = malloc(strlen(consumable)+1);
+    strcpy(current_file, consumable);
     printf("crea_wordlist: %s\n", current_file);
     apunt=(char *)strchr(current_file, ',');
 
@@ -56,26 +55,19 @@ struct words *crea_wordlist(const char *filenames) {
     } else {
       consumable = "";
     }
-    // Abrimos el fichero
 
+    // Abrimos el fichero
     if((file=fopen(current_file, "r"))==0) {
       IMPRIME("\n(!) FATAL: Error opening wordlist file: %s\n", current_file);
       exit(-1);
       }
 
     // Bucle por cada fichero
-
     while(!feof(file)) {
 
-      // Inicializamos
-
-      memset(cbuffer, 0, STRING_SIZE);
-
-
       // Leemos y limpiamos
-
-      if(fgets(cbuffer, STRING_SIZE-1, file)==0) {
-        if(options.debuging>4) printf("[++++] crea_wordlist() Ending the parse of file: %s\n", current_file);
+      if(fgets(cbuffer, 255, file)==0) {
+        if(options.debug_level>4) printf("[++++] crea_wordlist() Ending the parse of file: %s\n", current_file);
         break;
         }
 
@@ -86,13 +78,13 @@ struct words *crea_wordlist(const char *filenames) {
       if(cbuffer[0]=='#') cbuffer[0]='\0';
 
       if(strlen(cbuffer)) {
-	current->word = (char*) malloc(strlen(cbuffer)+1);
+        current->word = malloc(strlen(cbuffer)+1);
         strcpy(current->word, cbuffer);
         contador++;
-        current->siguiente=(struct words *)malloc(sizeof(struct words));
-        memset(current->siguiente, 0, sizeof(struct words));
-        current=current->siguiente;
-	current->word = "";
+        current->next=(struct words *)malloc(sizeof(struct words));
+        memset(current->next, 0, sizeof(struct words));
+        current=current->next;
+        current->word = "";
         }
 
       }
@@ -128,7 +120,7 @@ struct words *crea_wordlist(const char *filenames) {
 
 struct words *crea_wordlist_fich(char *fichero) {
   FILE *file;
-  char cbuffer[STRING_SIZE];
+  char cbuffer[256];
   struct words *ecurrent;
   struct words *ebase;
 
@@ -136,7 +128,6 @@ struct words *crea_wordlist_fich(char *fichero) {
   // Inicializamos
   ecurrent=(struct words *)malloc(sizeof(struct words));
   memset(ecurrent, 0, sizeof(struct words));
-  memset(cbuffer, 0, STRING_SIZE);
 
   // Application does not check for empty pointers.
   ecurrent->word = "";
@@ -152,23 +143,21 @@ struct words *crea_wordlist_fich(char *fichero) {
 
   while(!feof(file)) {
 
-  memset(cbuffer, 0, STRING_SIZE);
-
   // Leemos y limpiamos
-  if(fgets(cbuffer, STRING_SIZE-1, file)==0) {
-      if(options.debuging>4) printf("[++++] crea_wordlist_fich() Ending the parse of file: %s\n", fichero);
+  if(fgets(cbuffer, 255, file)==0) {
+      if(options.debug_level>4) printf("[++++] crea_wordlist_fich() Ending the parse of file: %s\n", fichero);
       break;
       }
 
     limpia_url(cbuffer);
 
     // Metemos en la lista
-    ecurrent->word = (char*) malloc(strlen(cbuffer)+1);
+    ecurrent->word = malloc(strlen(cbuffer)+1);
     strcpy(ecurrent->word, cbuffer);
 
-    if(options.debuging>5) printf("[+++++] crea_wordlist_fich() ADD_WORD: %s\n", ecurrent->word);
-    ecurrent->siguiente=(struct words *)malloc(sizeof(struct words));
-    ecurrent=ecurrent->siguiente;
+    if(options.debug_level>5) printf("[+++++] crea_wordlist_fich() ADD_WORD: %s\n", ecurrent->word);
+    ecurrent->next=(struct words *)malloc(sizeof(struct words));
+    ecurrent=ecurrent->next;
 
     memset(ecurrent, 0, sizeof(struct words));
 
@@ -180,9 +169,9 @@ struct words *crea_wordlist_fich(char *fichero) {
 
   ecurrent=ebase;
 
-  while(ecurrent->siguiente!=0) {
-    if(options.debuging>5) printf("[+++++] crea_wordlist_fich() WORD: %s\n", ecurrent->word);
-    ecurrent=ecurrent->siguiente;
+  while(ecurrent->next!=0) {
+    if(options.debug_level>5) printf("[+++++] crea_wordlist_fich() WORD: %s\n", ecurrent->word);
+    ecurrent=ecurrent->next;
     }
 
   fclose(file);
@@ -192,14 +181,13 @@ struct words *crea_wordlist_fich(char *fichero) {
 }
 
 
-
 /*
  * CREA_EXTSLIST: Crea la lista de extensiones
  *
  */
 
 struct words *crea_extslist(char *lista) {
-  char cbuffer[STRING_SIZE];
+  char cbuffer[256];
   struct words *ecurrent;
   struct words *ebase;
   char *apunt;
@@ -211,17 +199,15 @@ struct words *crea_extslist(char *lista) {
 
   //application does not check for empty pointers
   ecurrent->word = "";
-
-  memset(cbuffer, 0, STRING_SIZE);
   ebase=ecurrent;
 
 
   while(strlen(lista)) {
 
     // Separamos la lista de extensiones
-    strncpy(cbuffer, lista, STRING_SIZE-1);
+    strcpy(cbuffer, lista);
 
-    apunt=(char *)strchr(cbuffer, ',');
+    apunt=strchr(cbuffer, ',');
 
     if(apunt!=0) *apunt='\0';
 
@@ -231,10 +217,10 @@ struct words *crea_extslist(char *lista) {
     ecurrent->word = (char*) malloc(strlen(cbuffer)+1);
     strcpy(ecurrent->word, cbuffer);
 
-    if(options.debuging>5) printf("[+++++] crea_extslist() EXT: %s\n", ecurrent->word);
+    if(options.debug_level>5) printf("[+++++] crea_extslist() EXT: %s\n", ecurrent->word);
 
-    ecurrent->siguiente=(struct words *)malloc(sizeof(struct words));
-    ecurrent=ecurrent->siguiente;
+    ecurrent->next=(struct words *)malloc(sizeof(struct words));
+    ecurrent=ecurrent->next;
     memset(ecurrent, 0, sizeof(struct words));
 
     //application does not check for empty pointers
@@ -245,9 +231,9 @@ struct words *crea_extslist(char *lista) {
 
   ecurrent=ebase;
 
-  while(ecurrent->siguiente!=0) {
-    if(options.debuging>5) printf("[+++++] crea_extslist() EXT: %s\n", ecurrent->word);
-    ecurrent=ecurrent->siguiente;
+  while(ecurrent->next!=0) {
+    if(options.debug_level>5) printf("[+++++] crea_extslist() EXT: %s\n", ecurrent->word);
+    ecurrent=ecurrent->next;
     }
 
   return ebase;
@@ -263,9 +249,9 @@ int count_words(const struct words *list) {
   unsigned int count=0;
   struct words *ptr= (struct words*)list;
 
-  while(0 != ptr->siguiente) {
+  while(0 != ptr->next) {
 	 count++;
-	 ptr=ptr->siguiente;
+	 ptr=ptr->next;
 	}
 
   return count;

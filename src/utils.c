@@ -31,14 +31,13 @@ void limpia_url(char *limpia) {
  *
  */
 
-void barra(char *barr) {
-
+void barra(char * barr) {
   if(barr[strlen(barr)-1]=='/') {
-    if(options.debuging>5) printf("[+++++] barra() LAST = 0x2F\n");
-    } else {
-    strncat(barr, "\x2f", 2);
-    }
-
+    if(options.debug_level>5) printf("[+++++] barra() LAST = 0x2F\n");
+  } else {
+    // extra character has been allocated, so this is safe
+    strcat(barr, "\x2f");
+  }
 }
 
 
@@ -52,12 +51,12 @@ void guardadir(char *direccion) {
   if(!options.silent_mode) printf("                                                                               \r");
   IMPRIME("==> DIRECTORY: %s\n", direccion);
   options.recursion_level++;
-  if(options.debuging>4) printf("[++++] guardadir() RECURSION_LEVEL: %d\n", options.recursion_level);
+  if(options.debug_level>4) printf("[++++] guardadir() RECURSION_LEVEL: %d\n", options.recursion_level);
   dirlist_final->word = malloc(strlen(direccion) + 1);
   strcpy(dirlist_final->word, direccion);
-  dirlist_final->siguiente=(struct words *)malloc(sizeof(struct words));
-  memset(dirlist_final->siguiente, 0, sizeof(struct words));
-  dirlist_final=dirlist_final->siguiente;
+  dirlist_final->next=(struct words *)malloc(sizeof(struct words));
+  memset(dirlist_final->next, 0, sizeof(struct words));
+  dirlist_final=dirlist_final->next;
   existant=0;
 
 }
@@ -77,35 +76,33 @@ void elimina_dupwords(struct words *puntero) {
 
   prev=epun;
 
-  next=epun->siguiente;
+  next=epun->next;
 
-  while(epun->siguiente!=0) {
+  while(epun->next!=0) {
 
     if(next->word == 0) break;
     if(
-    (strncmp(epun->word, next->word, STRING_SIZE-1)==0 && !options.insensitive && next->siguiente!=0)
+    (strcmp(epun->word, next->word)==0 && !options.insensitive && next->next!=0)
     ||
-    (strncasecmp(epun->word, next->word, STRING_SIZE-1)==0 && options.insensitive && next->siguiente!=0)
+    (strcasecmp(epun->word, next->word)==0 && options.insensitive && next->next!=0)
     ) {
 
-      if(options.debuging>4) printf("[++++] elimina_dupwords() DUP_WORD: %s - %s\n", epun->word, next->word);
+      if(options.debug_level>4) printf("[++++] elimina_dupwords() DUP_WORD: %s - %s\n", epun->word, next->word);
     contador--;
-      prev->siguiente=next->siguiente;
+      prev->next=next->next;
       free(next);
-      next=prev->siguiente;
-
-      // recursion_level--; (!) En caso de necesitar eliminar directorios duplicados
+      next=prev->next;
 
       } else {
       prev=next;
-      next=next->siguiente;
+      next=next->next;
       }
 
     if(next==0) {
-      if(options.debuging>5) printf("[+++++] elimina_dupwords() FIN_loop\n");
-      epun=epun->siguiente;
+      if(options.debug_level>5) printf("[+++++] elimina_dupwords() FIN_loop\n");
+      epun=epun->next;
       prev=epun;
-      next=epun->siguiente;
+      next=epun->next;
       }
 
     }
@@ -121,13 +118,6 @@ void elimina_dupwords(struct words *puntero) {
 
 FILE *abrir_file(char *file) {
   FILE *desc;
-
-  /*
-  if(access (file, F_OK)==0) {
-  printf("\n(!) FATAL: File exists, can't overwrite\n");
-  exit(-1);
-    }
-  */
 
   if((desc=fopen(file, "a"))==0) {
     printf("\n(!) FATAL: Error opening output file: %s\n", file);
@@ -157,7 +147,7 @@ int location_cmp(char *A, char *B) {
     if(ptr!=0) A=ptr+1;
     }
 
-  if(options.debuging>4) printf("[++++] location_cmp() A[%zu]: '%s'\n", strlen(A), uri_decode(A));
+  if(options.debug_level>4) printf("[++++] location_cmp() A[%zu]: '%s'\n", strlen(A), A);
 
   if(strncmp(B, "http://", 7)==0 || strncmp(B, "https://", 8)==0) {
     ptr=(char *)strchr(B, '/');
@@ -168,11 +158,11 @@ int location_cmp(char *A, char *B) {
     if(ptr!=0) B=ptr+1;
     }
 
-  if(options.debuging>4) printf("[++++] location_cmp() B[%zu]: '%s'\n", strlen(B), uri_decode(B));
+  if(options.debug_level>4) printf("[++++] location_cmp() B[%zu]: '%s'\n", strlen(B), B);
 
-  result=strncmp(uri_decode(A), uri_decode(B), strlen(A)>strlen(B) ? strlen(A) : strlen(B));
+  result=strncmp(A, B, strlen(A)>strlen(B) ? strlen(A) : strlen(B));
 
-  if(options.debuging>4) printf("[++++] location_cmp() RESULT: %d (%zu)\n", result, strlen(A)>strlen(B) ? strlen(A) : strlen(B));
+  if(options.debug_level>4) printf("[++++] location_cmp() RESULT: %d (%zu)\n", result, strlen(A)>strlen(B) ? strlen(A) : strlen(B));
 
   return result;
 
@@ -188,7 +178,7 @@ void location_clean(char *cleaned, char *toelim) {
   char *ptr=0;
   char *A=cleaned;
 
-  if(options.debuging>3) printf("[+++] location_clean() TOCLEAN: %s | TOELIM: %s\n", cleaned, toelim);
+  if(options.debug_level>3) printf("[+++] location_clean() TOCLEAN: %s | TOELIM: %s\n", cleaned, toelim);
 
   // Jump to uri-path
   if(strncmp(A, "http://", 7)==0 || strncmp(A, "https://", 8)==0) {
@@ -212,7 +202,7 @@ void location_clean(char *cleaned, char *toelim) {
     *ptr = 0;
   }
 
-  if(options.debuging>3) printf("[+++] location_clean() CLEANED: %s\n", cleaned);
+  if(options.debug_level>3) printf("[+++] location_clean() CLEANED: %s\n", cleaned);
 }
 
 
@@ -223,7 +213,7 @@ void location_clean(char *cleaned, char *toelim) {
 
 void check_url(char *url) {
 
-  if(options.debuging>4) printf("[++++] check_url() URL: %s\n", url);
+  if(options.debug_level>4) printf("[++++] check_url() URL: %s\n", url);
 
   if(strncmp(url, "http://", 7)!=0 && strncmp(url, "https://", 8)!=0) {
     printf("\n(!) FATAL: Invalid URL format: %s\n", url);
@@ -279,7 +269,7 @@ char kbhit(void){
   key = 0;
     }
 
-  if(options.debuging>4) printf("[++++] kbhit() %d\n", key);
+  if(options.debug_level>4) printf("[++++] kbhit() %d\n", key);
 
   return(key);
 }
@@ -318,9 +308,7 @@ char *code2string(struct code *a, u_int v) {
   while(a[i].codenum!=v && a[i].codenum!=0xff) {
   i++;
   }
-
   return a[i].desc;
-
 }
 
 
@@ -332,7 +320,6 @@ char *code2string(struct code *a, u_int v) {
 void init_exts(void) {
 
   // Si no hay extensiones, creamos una vacia
-
   if(exts_num==0) {
 
     exts_current=(struct words *)malloc(sizeof(struct words));
@@ -340,53 +327,11 @@ void init_exts(void) {
     exts_base=exts_current;
     exts_current->word = "";
 
-    exts_current->siguiente=(struct words *)malloc(sizeof(struct words));
-    memset(exts_current->siguiente, 0, sizeof(struct words));
-    exts_current=exts_current->siguiente;
+    exts_current->next=(struct words *)malloc(sizeof(struct words));
+    memset(exts_current->next, 0, sizeof(struct words));
+    exts_current=exts_current->next;
 
     exts_num=1;
 
   }
-
-}
-
-
-/*
- * URI_DECODE: Decodifica una cadena con caracteres uri-encoded
- *
- */
-
-char *uri_decode(char *uri) {
-  unsigned int i=0;
-  int ptr=0;
-  char *decoded;
-  char hexa[3];
-  char code;
-
-  decoded=(char *)malloc(strlen(uri)+1);
-
-  for(i=0;i<strlen(uri);i++) {
-
-    switch(*(uri+i)) {
-      case '%':
-        memset(hexa, 0, 3);
-        sprintf(hexa, "%c%c", *(uri+i+1), *(uri+i+2));
-        i+=2;
-        //printf("HEXA: %s\n", hexa);
-        sscanf(hexa, "%x", (int *)&code);
-        //printf("CODE: %c\n", code);
-        *(decoded+ptr)=code;
-        ptr++;
-        break;
-      default:
-        *(decoded+ptr)=*(uri+i);
-        ptr++;
-        break;
-      }
-
-    }
-
-  *(decoded+ptr)='\0';
-
-  return decoded;
 }
