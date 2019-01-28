@@ -41,9 +41,9 @@ designed for helping in web vulnerability assessment.
 DIRB is based on libcurl so you need to install this library where meson
 can locate it. Once libcurl is installed properly you must only do:
 
- $ meson build
- $ ninja -C build
- $ sudo ninja -C build
+	$ meson build
+	$ ninja -C build
+	$ sudo ninja -C build install
 
 ## Usage
 
