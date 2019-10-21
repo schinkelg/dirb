@@ -27,8 +27,7 @@ struct words *crea_wordlist(const char *filenames) {
   consumable = malloc(strlen(filenames)+1);
   strcpy(consumable, filenames);
 
-  current=(struct words *)malloc(sizeof(struct words));
-  memset(current, 0, sizeof(struct words));
+  current=(struct words *)calloc(1, sizeof(struct words));
 
   //application does not check for empty pointers
   current->word = "";
@@ -81,8 +80,7 @@ struct words *crea_wordlist(const char *filenames) {
         current->word = malloc(strlen(cbuffer)+1);
         strcpy(current->word, cbuffer);
         contador++;
-        current->next=(struct words *)malloc(sizeof(struct words));
-        memset(current->next, 0, sizeof(struct words));
+        current->next=(struct words *)calloc(1, sizeof(struct words));
         current=current->next;
         current->word = "";
         }
@@ -120,8 +118,7 @@ struct words *crea_wordlist_fich(char *fichero) {
 
 
   // Inicializamos
-  ecurrent=(struct words *)malloc(sizeof(struct words));
-  memset(ecurrent, 0, sizeof(struct words));
+  ecurrent=(struct words *)calloc(1, sizeof(struct words));
 
   // Application does not check for empty pointers.
   ecurrent->word = "";
@@ -150,10 +147,8 @@ struct words *crea_wordlist_fich(char *fichero) {
     strcpy(ecurrent->word, cbuffer);
 
     if(options.debug_level>5) printf("[+++++] crea_wordlist_fich() ADD_WORD: %s\n", ecurrent->word);
-    ecurrent->next=(struct words *)malloc(sizeof(struct words));
+    ecurrent->next=(struct words *)calloc(1, sizeof(struct words));
     ecurrent=ecurrent->next;
-
-    memset(ecurrent, 0, sizeof(struct words));
 
     //application does not check for empty pointers
     ecurrent->word = "";
@@ -188,8 +183,7 @@ struct words *crea_extslist(char *lista) {
 
 
   // Inicializamos
-  ecurrent=(struct words *)malloc(sizeof(struct words));
-  memset(ecurrent, 0, sizeof(struct words));
+  ecurrent=(struct words *)calloc(1, sizeof(struct words));
 
   //application does not check for empty pointers
   ecurrent->word = "";
@@ -213,9 +207,8 @@ struct words *crea_extslist(char *lista) {
 
     if(options.debug_level>5) printf("[+++++] crea_extslist() EXT: %s\n", ecurrent->word);
 
-    ecurrent->next=(struct words *)malloc(sizeof(struct words));
+    ecurrent->next=(struct words *)calloc(1, sizeof(struct words));
     ecurrent=ecurrent->next;
-    memset(ecurrent, 0, sizeof(struct words));
 
     //application does not check for empty pointers
     ecurrent->word = "";
