@@ -29,7 +29,7 @@ struct words *crea_wordlist(const char *filenames) {
 
   current=(struct words *)malloc(sizeof(struct words));
   memset(current, 0, sizeof(struct words));
- 
+
   //application does not check for empty pointers
   current->word = "";
 
@@ -101,12 +101,6 @@ struct words *crea_wordlist(const char *filenames) {
   if(!options.silent_mode) printf("                                                                               \r");
   fflush(stdout);
   IMPRIME("GENERATED WORDS: %d\n", contador);
-
-  if(contador>BIGWORDLIST) {
-    IMPRIME("(!) WARNING: Wordlist is too large. This will take a long time to end.\n");
-    IMPRIME("    (Use mode '-w' if you want to scan anyway)\n");
-    if(options.exitonwarn) exit(-3);
-    }
 
   return wordlist_base;
 
@@ -250,9 +244,9 @@ int count_words(const struct words *list) {
   struct words *ptr= (struct words*)list;
 
   while(0 != ptr->next) {
-	 count++;
-	 ptr=ptr->next;
-	}
+    count++;
+    ptr=ptr->next;
+  }
 
   return count;
 }

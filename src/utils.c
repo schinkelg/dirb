@@ -322,15 +322,9 @@ void init_exts(void) {
   // Si no hay extensiones, creamos una vacia
   if(exts_num==0) {
 
-    exts_current=(struct words *)malloc(sizeof(struct words));
-    memset(exts_current, 0, sizeof(struct words));
-    exts_base=exts_current;
-    exts_current->word = "";
-
-    exts_current->next=(struct words *)malloc(sizeof(struct words));
-    memset(exts_current->next, 0, sizeof(struct words));
-    exts_current=exts_current->next;
-
+    exts_base=(struct words *)calloc(1, sizeof(struct words));
+    exts_base->word = "";
+    exts_current=(struct words *)calloc(1, sizeof(struct words));
     exts_num=1;
 
   }

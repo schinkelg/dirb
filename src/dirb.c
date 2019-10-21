@@ -91,32 +91,24 @@ int main(int argc, char *const *argv) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
   }
-  // Recepcion de parametros
 
+  // Recepcion de parametros
   if(argc<2) {
     usage();
     exit(-1);
     }
 
-  options.url_inicial = argv[1];
+  options.url_inicial = malloc(strlen(argv[1])+2);
+  strcpy(options.url_inicial, argv[1]);
 
   // Does the URL end with a forward slash?
   if (argv[1][strlen(argv[1])-1] != '/') {
-    options.url_inicial = malloc(strlen(argv[1])+2);
-    strcpy(options.url_inicial, argv[1]);
     strcat(options.url_inicial, "/");
-
-  } else {
-    options.url_inicial = argv[1];
   }
+  
   printf(options.url_inicial);
-  if(argc==2 || strncmp(argv[2], "-", 1)==0) {
-    options.mfile = DEFAULT_WORDLIST;
-    optind+=1;
-  } else {
-    options.mfile = argv[2];
-    optind+=2;
-  }
+  options.mfile = argv[2];
+  optind+=2;
 
   while((c = getopt(argc,argv,"a:c:d:fgh:H:ij:lm:M:n:N:o:p:P:rRsSvwx:X:u:tz:"))!= -1){
     switch(c) {
@@ -293,7 +285,7 @@ void banner(void) {
 
 void usage(void) {
 
-  printf("Usage: dirb <url_base> [<wordlist_file(s)>] [options]\n");
+  printf("Usage: dirb <url_base> <wordlist_file(s)> [options]\n");
 
   printf(" <url_base> : Base URL to scan.\n");
   printf(" <wordlist_file(s)> : List of wordfiles. (wordfile1,wordfile2,wordfile3...)\n");
