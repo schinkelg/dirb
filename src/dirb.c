@@ -61,7 +61,7 @@ int main(int argc, char *const *argv) {
     curl_easy_setopt(curl, CURLOPT_PORT, options.port);
   }
 
-  if(options.use_vhost) {    
+  if(options.use_vhost) {
     slist = curl_slist_append(slist, options.vhost);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
   }
@@ -154,8 +154,8 @@ int main(int argc, char *const *argv) {
           options.header_string = tmp;
         } else {
           options.header_string = malloc(strlen(optarg)+1);
-  	      strcpy(options.header_string, optarg);
-	      }
+          strcpy(options.header_string, optarg);
+        }
         options.add_header++;
         break;
       case 'i':
