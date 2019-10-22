@@ -319,12 +319,10 @@ char *code2string(struct code *a, u_int v) {
 
 void init_exts(void) {
 
-  // Si no hay extensiones, creamos una vacia
   if(exts_num==0) {
 
     exts_base=(struct words *)calloc(1, sizeof(struct words));
     exts_base->word = "";
-    exts_current=(struct words *)calloc(1, sizeof(struct words));
     exts_num=1;
 
   }

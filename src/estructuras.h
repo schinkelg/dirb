@@ -58,10 +58,7 @@ struct opciones {
   int debug_level;
   int exitonwarn;
   int save_found;
-  int mutations_file;
-  int mutations_list;
   int extensions_file;
-  int extensions_list;
   int saveoutput;
   int print_location;
   int port;
@@ -77,10 +74,7 @@ struct opciones {
 
   /* Parametros de linea de comandos */
 
-  char *mutation_file;
-  char *mutation_list;
   char *exts_file;
-  char *exts_list;
   char *proxy;
   char *pass_string;
   char *proxypass_string;

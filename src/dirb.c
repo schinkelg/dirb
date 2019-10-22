@@ -159,16 +159,6 @@ int main(int argc, char *const *argv) {
       case 'l':
         options.print_location=1;
         break;
-      case 'm':
-        options.mutations_file=1;
-        options.mutation_file = malloc(strlen(optarg)+1);
-        strcpy(options.mutation_file, optarg);
-        break;
-      case 'M':
-        options.mutations_list=1;
-        options.mutation_list = malloc(strlen(optarg)+1);
-        strcpy(options.mutation_list, optarg);
-        break;
       case 'N':
         options.ignore_nec=atoi(optarg);
         break;
@@ -218,11 +208,6 @@ int main(int argc, char *const *argv) {
         options.exts_file = malloc(strlen(optarg)+1);
         strcpy(options.exts_file, optarg);
         break;
-      case 'X':
-        options.extensions_list=1;
-        options.exts_list = malloc(strlen(optarg)+1);
-        strcpy(options.exts_list, optarg);
-        break;
       case 'z':
         options.speed=(atoi(optarg)<=0)?0:atoi(optarg);
         break;
@@ -233,15 +218,11 @@ int main(int argc, char *const *argv) {
         }
       }
 
-  // Chequeos iniciales
-
   get_options();
-
   init_exts();
 
   IMPRIME("\n-----------------\n\n");
 
-  // Creamos la lista de palabras
   printf("file: %s", options.mfile);
   palabras=crea_wordlist(options.mfile);
 
@@ -249,13 +230,9 @@ int main(int argc, char *const *argv) {
   mi = mallinfo();
   printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
 
-
-  // Lanzamos el bucle de descarga
-
   lanza_ataque(options.url_inicial, palabras);
   mi = mallinfo();
   printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
-  // Finalizamos
 
   cierre();
 
@@ -285,10 +262,10 @@ void banner(void) {
 
 void usage(void) {
 
-  printf("Usage: dirb <url_base> <wordlist_file(s)> [options]\n");
+  printf("Usage: dirb <url_base> <wordlist_file> [options]\n");
 
   printf(" <url_base> : Base URL to scan.\n");
-  printf(" <wordlist_file(s)> : List of wordfiles. (wordfile1,wordfile2,wordfile3...)\n");
+  printf(" <wordlist_file> : Location of wordlist file.\n");
 
   printf("\nOPTIONS\n");
   printf(" -a <agent_string> : Specify your custom USER_AGENT.\n");
@@ -311,12 +288,11 @@ void usage(void) {
   printf(" -u <username:password> : HTTP Authentication.\n");
   printf(" -v : Show also NOT_FOUND pages.\n");
   printf(" -w : Don't stop on WARNING messages.\n");
-  printf(" -X <extensions> / -x <exts_file> : Append each word with this extensions.\n");
+  printf(" -x <exts_file> : Append each word with this extensions.\n");
   printf(" -z <milisecs> : Add a miliseconds delay to not cause excessive Flood.\n");
 
   printf("\nEXAMPLES\n");
   printf(" ./dirb http://url/directory/ (Simple Test)\n");
-  printf(" ./dirb http://url/ -X .html (Test files with '.html' extension)\n");
   printf(" ./dirb http://url/ /usr/share/dirb/wordlists/vulns/apache.txt (Test with apache.txt wordlist)\n");
   printf(" ./dirb https://secure_url/ (Simple Test with SSL)\n");
 }

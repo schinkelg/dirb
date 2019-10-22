@@ -9,48 +9,23 @@
 #include "http_codes.h"
 
 
-/*
- * GET_NECS: Obtienes los NECs correspondientes a cada extension
- *
- */
-
 int get_necs(const char *direccion) {
-  int exts_pos=0;
-  int necs=0;
+  unsigned int not_found_count=0;
+  struct words *exts_current;
 
-  if(!options.silent_mode) printf("*** Calculating NOT_FOUND code...\r");
-  fflush(stdout);
+  if(!options.silent_mode) printf("*** Calculating NOT_FOUND code...\n");
 
-  // Inicializamos
   exts_current=exts_base;
 
-  // Bucle
-  for(exts_pos=0;exts_pos<exts_num;exts_pos++) {
-
+  for(unsigned int exts_pos=0;exts_pos<exts_num;exts_pos++) {
     nec[exts_pos]=calcula_nec(direccion);
-
-    if(options.debug_level>1) printf("[+] calcula_nec() (Size: %d - Location: '%s')\n", nec[exts_pos]->body_size, nec[exts_pos]->location);
-
-    if(options.debug_level>1) printf("[+] calcula_nec() SERVER_BANNER[%s]: %s\n", exts_current->word, nec[exts_pos]->server);
-
     exts_current=exts_current->next;
-
-    necs++;
+    not_found_count++;
     }
 
-  exts_current=exts_base;
-
-  if(!options.silent_mode) printf("                                                                               \r");
-  fflush(stdout);
-
-  return necs;
+  return not_found_count;
 }
 
-
-/*
- * CALCULA_NEC: Obtiene el codigo de pagina no existente
- *
- */
 
 struct result *calcula_nec(const char *direccion) {
   struct result nec1, nec2;
@@ -61,13 +36,10 @@ struct result *calcula_nec(const char *direccion) {
   char *rand_url1;
   char *rand_url2;
 
-  // Inicializamos
-  mynec = malloc(sizeof(struct result));
-  memset(mynec, 0, sizeof(struct result));
+  mynec = calloc(1, sizeof(struct result));
   memset(&nec1, 0, sizeof(struct result));
   memset(&nec2, 0, sizeof(struct result));
 
-  // Calculo del primer NEC
   rand_url1 = malloc(strlen(random_base_url1)+strlen(exts_current->word)+1);
   strcpy(rand_url1, random_base_url1);
   strcat(rand_url1, exts_current->word);
@@ -77,20 +49,14 @@ struct result *calcula_nec(const char *direccion) {
   strcat(url, rand_url1);
 
   nec1=get_url(url);
-  
+
   if(options.debug_level>2) printf("[++] calcula_nec() NEC1: %d\n", nec1.codigo_http);
 
   switch(nec1.codigo_http) {
 
-    case 200:
-      if(options.finetuning==1) nec1.body_size=nec1.body_words;
-      break;
-
     case 301:
     case 302:
-      if(options.finetuning==1) {
-      location_clean(nec1.location, rand_url1);
-      }
+      if(options.finetuning==1) location_clean(nec1.location, rand_url1);
       break;
 
     default:
@@ -98,10 +64,10 @@ struct result *calcula_nec(const char *direccion) {
       break;
     }
 
-  // Calculo del segundo NEC
   rand_url2 = malloc(strlen(random_base_url2)+strlen(exts_current->word)+1);
   strcpy(rand_url2, random_base_url2);
   strcat(rand_url2, exts_current->word);
+  free(url);
   url = malloc(strlen(direccion)+strlen(rand_url2)+1);
   strcpy(url, direccion);
   strcat(url, rand_url2);
@@ -109,7 +75,6 @@ struct result *calcula_nec(const char *direccion) {
   nec2=get_url(url);
   if(options.debug_level>2) printf("[++] calcula_nec() NEC2: %d - %d\n", nec2.codigo_http, nec2.body_size);
 
-  // Comparamos
   if(nec1.codigo_http==nec2.codigo_http) {
     switch(nec2.codigo_http) {
       case 200:
@@ -135,12 +100,10 @@ struct result *calcula_nec(const char *direccion) {
           if(options.finetuning!=1) printf("    (Try using FineTunning: '-f')\n");
           if(options.exitonwarn) { next_dir=1; }
           } else {
-          //mynec->location = malloc(strlen(nec1.location)+1);
           strcpy(mynec->location, nec1.location);
           }
         break;
       default:
-        mynec->body_size=nec1.body_size;
         break;
     }
   } else {
@@ -149,13 +112,12 @@ struct result *calcula_nec(const char *direccion) {
     if(options.exitonwarn) { next_dir=1; }
   }
 
-  
   mynec->codigo_http=nec1.codigo_http;
   mynec->body_size=nec1.body_size;
   if (nec1.server != NULL) {
     strcpy(mynec->server, nec1.server);
-  } 
-  
+  }
+
   if(options.debug_level>2) printf("[++] calcula_nec() NEC: %d - %d\n", mynec->codigo_http, mynec->body_size);
   free(url);
   free(rand_url1);

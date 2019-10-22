@@ -86,7 +86,7 @@ void get_options(void) {
   if(options.insensitive==1) {
     IMPRIME("OPTION: Using Case-Insensitive Searches\n");
     }
-  
+
   // -j
 
   if(options.port) {
@@ -97,40 +97,6 @@ void get_options(void) {
 
   if(options.print_location==1) {
     IMPRIME("OPTION: Printing LOCATION header\n");
-    }
-
-  // -m
-
-  if(options.mutations_file==1) {
-    struct words *s_current;
-
-    IMPRIME("MUTATION_FILE: %s | ", options.mutation_file);
-
-    s_current=crea_wordlist_fich(options.mutation_file);
-
-    while(s_current->next!=0) {
-      IMPRIME("(%s)", s_current->word);
-      s_current=s_current->next;
-      }
-
-    IMPRIME("\n");
-    }
-
-  // -M
-
-  if(options.mutations_list==1) {
-    struct words *s_current;
-
-    IMPRIME("MUTATION_LIST: (%s) | ", options.mutation_list);
-
-    s_current=crea_extslist(options.mutation_list);
-
-    while(s_current->next!=0) {
-      IMPRIME("(%s)", s_current->word);
-      s_current=s_current->next;
-      }
-
-    IMPRIME("\n");
     }
 
   // -N
@@ -206,26 +172,7 @@ void get_options(void) {
 
     IMPRIME("EXTENSIONS_FILE: %s | ", options.exts_file);
 
-    exts_base=crea_wordlist_fich(options.exts_file);
-    exts_current=exts_base;
-
-    while(exts_current->next!=0) {
-      IMPRIME("(%s)", exts_current->word);
-      exts_current=exts_current->next;
-      exts_num++;
-      }
-
-    IMPRIME(" [NUM = %d]\n", exts_num);
-    }
-
-  // -X
-
-  if(options.extensions_list==1) {
-    struct words *exts_current;
-
-    IMPRIME("EXTENSIONS_LIST: (%s) | ", options.exts_list);
-
-    exts_base=crea_extslist(options.exts_list);
+    exts_base=crea_wordlist(options.exts_file);
     exts_current=exts_base;
 
     while(exts_current->next!=0) {
@@ -242,7 +189,4 @@ void get_options(void) {
   if(options.speed) {
     IMPRIME("SPEED_DELAY: %d miliseconds\n", options.speed);
     }
-
-
 }
-

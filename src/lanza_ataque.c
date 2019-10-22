@@ -29,13 +29,12 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
   struct result tested_estruct;
   struct winsize ws;
 
-  // Inicializamos
   if(ioctl(0,TIOCGWINSZ,&ws)!=0) {
     columns=79;
-    } else {
-	columns=ws.ws_col-1;
-	if(options.debug_level>2) printf("[++] lanza_ataque() COLUMNS: %d\n", columns);
-	}
+  } else {
+    columns=ws.ws_col-1;
+    if(options.debug_level>2) printf("[++] lanza_ataque() COLUMNS: %d\n", columns);
+  }
 
   next_dir=0;
   alert=0;
@@ -48,29 +47,17 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
   strcpy(url_base, inicio);
   character=0;
 
-
   IMPRIME("\n---- Scanning URL: %s ----\n", url_base);
   get_necs(url_base);
 
-  // Bucle de peticiones
-  /////////////////////////////////////////////////////////////////////////////
-
   while(1) {
-    // Inicializamos cada bucle
     memset(&tested_estruct, 0, sizeof(struct result));
     memset(&tested_estruct2, 0, sizeof(struct result));
-    
+
     existant=1;
     fflush(outfile);
 
-
-    // Comprobamos si hay que dar otra vuelta
-
-    if(options.debug_level>3) printf("[+++] lanza_ataque() BUCLE1: %s - %d\n", (char *)wordlist->next, next_dir);
-
     if(wordlist->next==0 || next_dir) {
-
-      // Entramos en un directorio
 
       if(options.recursion_level && !options.dont_recurse) {
         next_dir=0;
@@ -90,22 +77,14 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         options.recursion_level--;
         dirlist_current=dirlist_current->next;
 
-
-        // Pruebas de directorio
-        //////////////////////////////////////////////////
-
-        // Comprobamos si el directorio es listable
-
         if(islistable(url_base)!=0) {
           IMPRIME("(!) WARNING: Directory IS LISTABLE. No need to scan it.\n");
           IMPRIME("    (Use mode '-w' if you want to scan it anyway)\n");
           if(options.exitonwarn) {
             next_dir=1;
             continue;
-            }
           }
-
-        // Si esta activada la opcion interactive, preguntamos
+        }
 
         if(options.interactive) {
           printf("(?) Do you want to scan this directory (y/n)? ");
@@ -117,33 +96,22 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
             printf("\nSkipping directory.\n");
             next_dir=1;
             continue;
-            }
           }
-
-        // Reiniciamos el bucle
-
+        }
         continue;
 
-        } else {
+      } else {
+        if(options.debug_level>4) printf("[++++] lanza_ataque() Se acabo la wordlist\n");
+        break;
+      }
+    }
 
-          if(options.debug_level>4) printf("[++++] lanza_ataque() Se acabo la wordlist\n");
-          break;
-
-        } // Fin pruebas directorio
-
-      }	// Fin comprobacion vuelta
-
-
-    // Pasamos la wordlist
-    ///////////////////////////////////////////////////////////////////////////
-
-    // Obtenemos la palabra de la lista
 
     if(exts_pos>=exts_num) {
       exts_current=exts_base;
       exts_pos=0;
       wordlist=wordlist->next;
-      }
+    }
 
     if (tested_word) free(tested_word);
     tested_word = malloc(strlen(wordlist->word) + strlen(exts_current->word)+1);
@@ -153,9 +121,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
     if(strlen(tested_word)==0) {
       if(options.debug_level>4) printf("[++++] lanza_ataque() VACIO\n");
       continue;
-      }
-
-    // Concatenamos la extension correspondiente
+    }
 
     strcat(tested_word, exts_current->word);
 
@@ -165,21 +131,16 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
     if(options.debug_level>3) printf("[+++] lanza_ataque() PALABRA: %s\n", tested_word);
 
 
-    // Generamos la URL y la limpiamos
     tested_url = malloc(strlen(url_base)+strlen(tested_word)+1);
     strcpy(tested_url, url_base);
     strcat(tested_url, tested_word);
     limpia_url(tested_word);
 
 
-    // Hacemos la peticion
-
     if(options.speed) usleep(options.speed*1000);
 
     tested_estruct=get_url(tested_url);
 
-
-    // Mostramos los resultados
 
     if(options.debug_level>3) printf("[+++] lanza_ataque() ESTADO: %d\n", tested_estruct.estado);
 
@@ -199,7 +160,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       if(!options.silent_mode) printf("%*c\r", columns, ' ');
       IMPRIME("+ Going to next directory.\n");
       next_dir=1;
-      }
+    }
 
     // Comprobamos si se ha pulsado la tecla q
 
@@ -208,7 +169,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       IMPRIME("+ Quitting.\n");
       cierre();
       exit(0);
-      }
+    }
 
     // Comprobamos si se ha pulsado la tecla r
 
@@ -216,7 +177,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       if(!options.silent_mode) printf("%*c\r", columns, ' ');
       IMPRIME("+ Remaining scan stats:\n");
       IMPRIME("Words: %d | Directories: %d\n", count_words(wordlist) * exts_num, count_words(dirlist_current));
-      }
+    }
 
     // Analisis del codigo devuelto
     switch(tested_estruct.codigo_http) {
@@ -228,10 +189,10 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
         if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http && tested_estruct.body_size==nec[exts_pos]->body_size) {
           existant=0;
-          } else {
-		  existant=1;
+        } else {
+          existant=1;
           if(options.debug_level>3) printf("[+++] lanza_ataque() 200: %d - %d\n", nec[exts_pos]->body_size, tested_estruct.body_size);
-          }
+        }
 
         break;
 
@@ -271,19 +232,20 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
           IMPRIME("    (Use mode '-w' if you want to scan it anyway)\n");
           if(options.exitonwarn) {
             next_dir=1;
-            } else {
+          } else {
             alert=0;
-            }
           }
+        }
+        free(tested_url2);
         tested_url2 = malloc(strlen(tested_estruct.url)+3);
         strcpy(tested_url2, tested_estruct.url);
-        
+
 
         if(strncmp(tested_url2+strlen(tested_url2)-1, "\x2f", 1)==0) {
           memcpy(tested_url2+strlen(tested_url2)-1, "_\x00", 2);
-          } else {
+        } else {
           memcpy(tested_url2+strlen(tested_url2), "_\x00", 2);
-          }
+        }
 
         limpia_url(tested_url2);
 
@@ -293,9 +255,9 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
 
         if(tested_estruct2.codigo_http==tested_estruct.codigo_http || tested_estruct.codigo_http==nec[exts_pos]->codigo_http) {
           existant=0;
-          } else {
+        } else {
           existant=1;
-          }
+        }
 
         break;
 
@@ -307,16 +269,12 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         if(tested_estruct.codigo_http==nec[exts_pos]->codigo_http) {
           existant=0;
           if(options.finetuning==1 && tested_estruct.body_size!=nec[exts_pos]->body_size) existant=1;
-          } else {
+        } else {
           existant=1;
-          }
+        }
 
-      break;
+        break;
     }
-
-
-    // Mostramos la informacion si es interesante
-    ///////////////////////////////////////////////////////////////////////////
 
     if(existant && tested_estruct.codigo_http!=options.default_nec && tested_estruct.codigo_http!=options.ignore_nec) {
 
@@ -328,7 +286,7 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
       if(options.print_location && strlen(tested_estruct.location)) {
         limpia_url(tested_estruct.location);
         IMPRIME("  (Location: '%s')\n", tested_estruct.location);
-        }
+      }
 
       // Exceso de eventos repetidos (pasa algo raro)
       alert_found++;
@@ -337,17 +295,15 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         if(!options.silent_mode) printf("%*c\r", columns, ' ');
         IMPRIME("(!) WARNING: Too many responses for this directory seem to be FOUND.\n");
         IMPRIME("    (Something is going wrong - Try Other Scan Mode)\n");
-		IMPRIME("    (Use mode '-w' if you want to scan it anyway)\n");
+        IMPRIME("    (Use mode '-w' if you want to scan it anyway)\n");
         if(options.exitonwarn) {
-		  next_dir=1;
-		  } else {
-		  alert_found=0;
-          }
+          next_dir=1;
+        } else {
+          alert_found=0;
         }
+      }
 
-      } else {
-
-	  // Opcion -v, mostrar todo
+    } else {
 
       if(options.nothide) {
         if(!options.silent_mode) printf("%*c\r", columns, ' ');
@@ -356,11 +312,11 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         if(options.print_location && strlen(tested_estruct.location)) {
           limpia_url(tested_estruct.location);
           IMPRIME("    (Location: '%s')\n", tested_estruct.location);
-          }
         }
       }
+    }
 
     exts_pos++;
     free(tested_url);
-    } // fin while
+  } // fin while
 }
