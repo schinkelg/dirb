@@ -1,7 +1,7 @@
 /*
  * DIRB
  *
- * dirb.c - Nucleo central del programa
+ * dirb.c
  *
  */
 
@@ -9,19 +9,13 @@
 #include <malloc.h>
 
 
-/*
- * MAIN: Nucleo del programa
- *
- */
-
 int main(int argc, char *const *argv) {
   struct words *palabras;
   int c=0;
 
   banner();
 
-  // Inicializaciones globales
-  memset(&options, 0, sizeof(struct opciones));
+  memset(&options, 0, sizeof(struct options));
 
   options.exitonwarn=1;
   options.ignore_nec=0;
@@ -92,7 +86,6 @@ int main(int argc, char *const *argv) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
   }
 
-  // Recepcion de parametros
   if(argc<2) {
     usage();
     exit(-1);
@@ -105,8 +98,7 @@ int main(int argc, char *const *argv) {
   if (argv[1][strlen(argv[1])-1] != '/') {
     strcat(options.url_inicial, "/");
   }
-  
-  printf(options.url_inicial);
+
   options.mfile = argv[2];
   optind+=2;
 
@@ -221,44 +213,20 @@ int main(int argc, char *const *argv) {
   get_options();
   init_exts();
 
-  IMPRIME("\n-----------------\n\n");
-
-  printf("file: %s", options.mfile);
   palabras=crea_wordlist(options.mfile);
 
-  struct mallinfo mi;
-  mi = mallinfo();
-  printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
-
   lanza_ataque(options.url_inicial, palabras);
-  mi = mallinfo();
-  printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
-
   cierre();
-
-  mi = mallinfo();
-  printf("Total allocated space (uordblks):      %d\n", mi.uordblks);
   exit(0);
 
 }
 
-
-
-/*
- * BANNER: Muestra el banner de presentacion del programa
- *
- */
 
 void banner(void) {
   printf("dirb v"VERSION"    \n");
   printf("\n");
 }
 
-
-/*
- * OPCIONES: Muestra el menu de opciones disponibles
- *
- */
 
 void usage(void) {
 

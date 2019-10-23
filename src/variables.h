@@ -13,7 +13,7 @@
 
 FILE *outfile;                    // Fichero de output
 CURL *curl;                       // Descriptor CURL
-struct opciones options;          // Array con las opciones recibidas del usuario
+struct options options;
 
 struct result *nec[100];          // Array que almacena los NECs
 int contador;                     // Contador de palabras generadas

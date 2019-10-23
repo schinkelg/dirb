@@ -8,10 +8,6 @@
 #include "global.h"
 
 
-/* Estructuras */
-
-// Resultado de una peticion
-
 struct result {
   char *url;
   CURLcode estado;
@@ -26,15 +22,11 @@ struct result {
 };
 
 
-// Codigo HTTP
-
 struct code {
   unsigned int codenum;
   char *desc;
 };
 
-
-// Lista de palabras
 
 struct words {
   void *anterior;
@@ -43,9 +35,7 @@ struct words {
 };
 
 
-/* Opciones de linea de comandos */
-
-struct opciones {
+struct options {
   int use_vhost;
   int use_proxy;
   int use_proxypass;

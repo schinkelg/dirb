@@ -17,11 +17,3 @@
 /* MACROs */
 
 #define   IMPRIME(f, s...)  printf(f, ## s); if(options.saveoutput) fprintf(outfile, f, ## s);
-
-
-
-
-
-
-
-

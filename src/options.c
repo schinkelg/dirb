@@ -1,17 +1,12 @@
 /*
  * DIRB
  *
- * options.c - Maneja las opciones de usuario
+ * options.c
  *
  */
 
 #include "dirb.h"
 
-
-/*
- * OPTIONS: Maneja las opciones de usuario
- *
- */
 
 void get_options(void) {
   struct tm *ptr;
@@ -35,9 +30,9 @@ void get_options(void) {
     fprintf(outfile, "OUTPUT_FILE: %s\n", options.savefile);
     }
 
-  IMPRIME("START_TIME: %s", asctime(ptr));
-  IMPRIME("URL_BASE: %s\n", options.url_inicial);
-  IMPRIME("WORDLIST_FILES: %s\n", options.mfile);
+  IMPRIME("Start time: %s", asctime(ptr));
+  IMPRIME("Base URL:   %s\n", options.url_inicial);
+  IMPRIME("Wordlist:   %s\n", options.mfile);
 
   // -a
 
