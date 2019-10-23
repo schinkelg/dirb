@@ -209,10 +209,9 @@ void lanza_ataque(char *inicio, struct words *wordlist) {
         } else {
           existant=1;
           // test for directory
-          // one extra for slash from barra()
           tested_url2 = malloc(strlen(tested_estruct.url)+2);
           strcpy(tested_url2, tested_estruct.url);
-          barra(tested_url2);
+          if(tested_url2[strlen(tested_url2)-1]!='/') strcat(tested_url2, "\x2f");
 
           if(options.debug_level>3) printf("[+++] lanza_ataque() Directory_compare: '%s' - '%s'\n", tested_estruct.location, tested_url2);
 

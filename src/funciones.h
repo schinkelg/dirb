@@ -35,7 +35,6 @@ int count_words(const struct words *list);
 
 // utils.c
 void limpia_url(char *limpia);
-void barra(char *barr);
 void guardadir(char *direccion);
 void elimina_dupwords(struct words *puntero);
 FILE *abrir_file(char *file);

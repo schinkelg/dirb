@@ -8,11 +8,6 @@
 #include "dirb.h"
 
 
-/*
- * LIMPIA_URL: Corta la cadena si contiene los caracteres (\r), (\n) o ( )
- *
- */
-
 void limpia_url(char *limpia) {
   char *ptr;
 
@@ -25,26 +20,6 @@ void limpia_url(char *limpia) {
 
 }
 
-
-/*
- * BARRA: Añade una barra (/) al final de una cadena si no la tiene
- *
- */
-
-void barra(char * barr) {
-  if(barr[strlen(barr)-1]=='/') {
-    if(options.debug_level>5) printf("[+++++] barra() LAST = 0x2F\n");
-  } else {
-    // extra character has been allocated, so this is safe
-    strcat(barr, "\x2f");
-  }
-}
-
-
-/*
- * GUARDADIR: Guarda un directorio en la lista de directorios
- *
- */
 
 void guardadir(char *direccion) {
 
@@ -60,55 +35,6 @@ void guardadir(char *direccion) {
   existant=0;
 
 }
-
-
-/*
- * ELIMINA_DUPWORDS: Elimina elementos duplicados en una lista de palabras
- *
- */
-
-void elimina_dupwords(struct words *puntero) {
-  struct words *epun;
-  struct words *next;
-  struct words *prev;
-
-  epun=puntero;
-
-  prev=epun;
-
-  next=epun->next;
-
-  while(epun->next!=0) {
-
-    if(next->word == 0) break;
-    if(
-    (strcmp(epun->word, next->word)==0 && !options.insensitive && next->next!=0)
-    ||
-    (strcasecmp(epun->word, next->word)==0 && options.insensitive && next->next!=0)
-    ) {
-
-      if(options.debug_level>4) printf("[++++] elimina_dupwords() DUP_WORD: %s - %s\n", epun->word, next->word);
-    contador--;
-      prev->next=next->next;
-      free(next);
-      next=prev->next;
-
-      } else {
-      prev=next;
-      next=next->next;
-      }
-
-    if(next==0) {
-      if(options.debug_level>5) printf("[+++++] elimina_dupwords() FIN_loop\n");
-      epun=epun->next;
-      prev=epun;
-      next=epun->next;
-      }
-
-    }
-
-}
-
 
 
 /*
