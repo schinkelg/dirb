@@ -29,7 +29,7 @@ retry:
   if (estructura.url != 0) free(estructura.url);
 
   memset(&estructura, 0, sizeof(struct result));
-  
+
   estructura.url = 0;
 
   estructura.url = malloc(strlen(resp_url)+1);

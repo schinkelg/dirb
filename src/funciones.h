@@ -44,5 +44,5 @@ void check_url(char *url);
 int islistable(char *direccion);
 char kbhit(void);
 void cierre(void);
-char *code2string(struct code *a, u_int v);
+char *code2string(struct code *a, unsigned int v);
 void init_exts(void);

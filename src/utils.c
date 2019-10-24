@@ -228,7 +228,7 @@ void cierre(void) {
  *
  */
 
-char *code2string(struct code *a, u_int v) {
+char *code2string(struct code *a, unsigned int v) {
   unsigned int i=0;
 
   while(a[i].codenum!=v && a[i].codenum!=0xff) {

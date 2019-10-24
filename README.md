@@ -1,13 +1,13 @@
 # DIRB - URL Bruteforcer
 
-darkraver@open-labs.org (http://dirb.sf.net) 
+darkraver@open-labs.org (http://dirb.sf.net)
 Forked from Sourceforge, and BustedSec on Github.
-Adapted for my own personal use. 
+Adapted for my own personal use.
 
 ## What is DIRB?
 
-DIRB is a Web Content Scanner. It looks for existing (and/or hidden) Web 
-Objects. It basically works by launching a dictionary based attack against 
+DIRB is a Web Content Scanner. It looks for existing (and/or hidden) Web
+Objects. It basically works by launching a dictionary based attack against
 a web server and analizing the response.
 
 DIRB comes with a set of preconfigured attack wordlists for easy usage but 
@@ -50,31 +50,23 @@ can locate it. Once libcurl is installed properly you must only do:
 DIRB takes 2 main parameters, the base URL for testing and a list of wordlist 
 files used for the attack. Example:
 
-	$ ./dirb.exe http://www.test.org/ common.txt 
+	$ ./dirb http://www.test.org/ common.txt 
 
 
 The URL must be a valid standard URL and the wordlists are simple text files 
 with a word by line. It is also possible to scan subdirectories directly:
 
-	$ ./dirb.exe http://www.test.org/html/ common.txt
+	$ ./dirb http://www.test.org/html/ common.txt
 	
 	
 For SSL simply include the HTTPS url:
 
-	$ ./dirb.exe https://www.test.org/ common.txt -i
+	$ ./dirb https://www.test.org/ common.txt -i
 
 
-You can use multiple wordfiles at a time this way (separated by comma):
+You can append different extensions to the probed words, by using the -x option:
 
-	$ ./dirb.exe https://www.test.org/ common.txt,spanish.txt,names.txt 
-	
-
-You can append different extensions to the probed words, by using the -x or 
-the -X option:
-
-	$ ./dirb.exe https://www.test.org/ common.txt -X .html,.asp,.jsp,,
-
-	$ ./dirb.exe https://www.test.org/ common.txt -x extensions.txt
+	$ ./dirb https://www.test.org/ common.txt -x extensions.txt
 	
 	
 ## Examples
@@ -82,19 +74,7 @@ the -X option:
 + Scan a webserver for common directories/files: (without using file 
 extensions)
 	
-	$ ./src/dirb.exe http://www.test.org/ wordlists/common.txt	
-
-
-+ Scan a webserver for common directories/files: (search for PHP and HTML 
-files)
-
-	$ ./src/dirb.exe http://www.test.org/ wordlists/common.txt -X .php,.html	
-
-
-+ When a file is found, try different variations: (~, .old, etc...)
-
-	$ ./src/dirb.exe http://www.test.org/ wordlists/common.txt -X .php,.html -M ~,.tmp,.old,.backup,.test
-	
+	$ ./src/dirb http://www.test.org/ wordlists/common.txt	
 
 
 ## Bugs
@@ -108,8 +88,6 @@ Please notify them to: darkraver@open-labs.org
 
 Project manager: The Dark Raver
 
-Contributors: Sage, Jfs, Warezzman, The Dark Raver, Sha0, Hubert Seiwert, Pablo Catalina 
+Contributors: Sage, Jfs, Warezzman, The Dark Raver, Sha0, Hubert Seiwert, Pablo Catalina
 
 Beta-testers, Ideas: Necronoid, Fatuo, IaM, Laramies, Mandingo
-
-

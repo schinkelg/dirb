@@ -1,7 +1,8 @@
 DIRB FAQ
 ========
 
-Questions:
+Questions
+---------
 
 1) Can I use multiple wordfiles at a time?
 
@@ -23,17 +24,12 @@ webserver and they don't found anything. DIRB can give me some hope?
 9) What about a multi-thread version?
 
 
-####################################################
-
+ANSWERS
+-------
 
 1) Can I use multiple wordfiles at a time?
 
-YES, the wordfile parameter lets you specify multiple files separated by 
-coma: ","
-
-Example:
-
-	$./dirb http://www.site.com/ wordlist1.txt,wordlist2.txt,wordlist3.txt
+No. But you can easily create your own with tools like cat, grep, uniq and the like.
 
 
 2) I know 3 directories exist, how can I scan them?

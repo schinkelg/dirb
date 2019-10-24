@@ -7,6 +7,7 @@
 
 #include "dirb.h"
 #include <malloc.h>
+#include <getopt.h>
 
 
 int main(int argc, char *const *argv) {
@@ -86,7 +87,7 @@ int main(int argc, char *const *argv) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
   }
 
-  if(argc<2) {
+  if(argc<3) {
     usage();
     exit(-1);
     }
@@ -100,7 +101,6 @@ int main(int argc, char *const *argv) {
   }
 
   options.mfile = argv[2];
-  optind+=2;
 
   while((c = getopt(argc,argv,"a:c:d:fgh:H:ij:lm:M:n:N:o:p:P:rRsSvwx:X:u:tz:"))!= -1){
     switch(c) {
