@@ -1,18 +1,13 @@
 /*
  * DIRB
  *
- * crea_wordlist.c - Crea la lista de palabras a probar
+ * crea_wordlist.c
  *
  */
 
 #include <stdio.h>
 #include "dirb.h"
 
-
-/*
- * CREA_WORDLIST: Crea la lista de palabras a probar a partir de un fichero
- *
- */
 
 struct words *crea_wordlist(const char *filename) {
   FILE *file;
@@ -40,17 +35,11 @@ struct words *crea_wordlist(const char *filename) {
     strcpy(wordlist->word, cbuffer);
     wordlist->next=(struct words *)calloc(1, sizeof(struct words));
     wordlist=wordlist->next;
-    wordlist->word = "";
     }
 
   fclose(file);
   return base;
 }
-
-/*
- * COUNT_WORDS: Count the words in the list.
- *
- */
 
 int count_words(const struct words *list) {
   unsigned int count=0;

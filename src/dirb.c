@@ -11,7 +11,7 @@
 
 
 int main(int argc, char *const *argv) {
-  struct words *palabras;
+  struct words *wordlist;
   int c=0;
 
   banner();
@@ -213,9 +213,9 @@ int main(int argc, char *const *argv) {
   get_options();
   init_exts();
 
-  palabras=crea_wordlist(options.mfile);
+  wordlist=crea_wordlist(options.mfile);
 
-  lanza_ataque(options.url_inicial, palabras);
+  lanza_ataque(options.url_inicial, wordlist);
   cierre();
   exit(0);
 

@@ -21,26 +21,19 @@ void limpia_url(char *limpia) {
 }
 
 
-void guardadir(char *direccion) {
+void guardadir(char *directory) {
 
   if(!options.silent_mode) printf("                                                                               \r");
-  IMPRIME("==> DIRECTORY: %s\n", direccion);
+  IMPRIME("==> DIRECTORY: %s\n", directory);
   options.recursion_level++;
-  if(options.debug_level>4) printf("[++++] guardadir() RECURSION_LEVEL: %d\n", options.recursion_level);
-  dirlist_final->word = malloc(strlen(direccion) + 1);
-  strcpy(dirlist_final->word, direccion);
-  dirlist_final->next=(struct words *)malloc(sizeof(struct words));
-  memset(dirlist_final->next, 0, sizeof(struct words));
+  dirlist_final->word = malloc(strlen(directory) + 1);
+  strcpy(dirlist_final->word, directory);
+  dirlist_final->next=(struct words *)calloc(1, sizeof(struct words));
   dirlist_final=dirlist_final->next;
   existant=0;
 
 }
 
-
-/*
- * ABRIR_FILE: Abre un fichero de output
- *
- */
 
 FILE *abrir_file(char *file) {
   FILE *desc;
@@ -54,11 +47,6 @@ FILE *abrir_file(char *file) {
 
 }
 
-
-/*
- * LOCATION_CMP: Compara 2 cabeceras Location
- *
- */
 
 int location_cmp(char *A, char *B) {
   int result=0;
@@ -95,11 +83,6 @@ int location_cmp(char *A, char *B) {
 }
 
 
-/*
- * LOCATION_CLEAN: Limpia la cacebera location
- *
- */
-
 void location_clean(char *cleaned, char *toelim) {
   char *ptr=0;
   char *A=cleaned;
@@ -109,12 +92,12 @@ void location_clean(char *cleaned, char *toelim) {
   // Jump to uri-path
   if(strncmp(A, "http://", 7)==0 || strncmp(A, "https://", 8)==0) {
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A++;
+    if(ptr!=0) A=ptr+1;
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A++;
+    if(ptr!=0) A=ptr+1;
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A++;
-  }
+    if(ptr!=0) A=ptr+1;
+    }
 
   // Remove arguments
   ptr= strchr(A, '?');
@@ -132,11 +115,6 @@ void location_clean(char *cleaned, char *toelim) {
 }
 
 
-/*
- * CHECK_URL: Comprueba que la URL inicial tiene el formato correcto
- *
- */
-
 void check_url(char *url) {
 
   if(options.debug_level>4) printf("[++++] check_url() URL: %s\n", url);
@@ -150,15 +128,10 @@ void check_url(char *url) {
 }
 
 
-/*
- * ISLISTABLE: Comprueba si un directorio es listable o no
- *
- */
-
-int islistable(char *direccion) {
+int islistable(char *directory) {
 
   listable=-1;
-  get_url(direccion);
+  get_url(directory);
 
   if(listable==-1) listable=0;
 
@@ -166,11 +139,6 @@ int islistable(char *direccion) {
 
 }
 
-
-/*
- * KBHIT: Comprueba si alguna tecla ha sido pulsada (no bloqueante)
- *
- */
 
 char kbhit(void){
   struct timeval tv;
@@ -201,11 +169,6 @@ char kbhit(void){
 }
 
 
-/*
- * CIERRE: Codigo de finalizacion
- *
- */
-
 void cierre(void) {
   struct tm *ptr;
   time_t tm;
@@ -223,11 +186,6 @@ void cierre(void) {
 }
 
 
-/*
- * CODE2STRING: Convierte un codigo en su cadena equivalente
- *
- */
-
 char *code2string(struct code *a, unsigned int v) {
   unsigned int i=0;
 
@@ -238,17 +196,12 @@ char *code2string(struct code *a, unsigned int v) {
 }
 
 
-/*
- * INIT_EXTS: Inicializa el array de extensiones
- *
- */
-
 void init_exts(void) {
 
   if(exts_num==0) {
 
     exts_base=(struct words *)calloc(1, sizeof(struct words));
-    exts_base->word = "";
+    exts_base->word="";
     exts_num=1;
 
   }
