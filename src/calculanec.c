@@ -40,7 +40,6 @@ struct result *calcula_nec(const char *direccion) {
   memset(&nec1, 0, sizeof(struct result));
   memset(&nec2, 0, sizeof(struct result));
 
-  printf("ext word ptr:%p",&exts_current->word);
   rand_url1 = malloc(strlen(random_base_url1)+strlen(exts_current->word)+1);
   strcpy(rand_url1, random_base_url1);
   strcat(rand_url1, exts_current->word);

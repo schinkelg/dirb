@@ -17,8 +17,6 @@ struct options options;
 
 struct result *nec[100];          // Array que almacena los NECs
 int contador;                     // Contador de palabras generadas
-int descargadas;                  // Numero de URLs descargadas
-int encontradas;                  // Numero de URLs encontradas
 int errores;                      // Contador de errores
 int existant;                     // Flag para determinar si la URL actual existe
 int listable;                     // Flag para determinar si un directorio es listable

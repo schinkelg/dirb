@@ -25,16 +25,13 @@ int main(int argc, char *const *argv) {
   options.speed=0;
   options.add_header=0;
 
-  encontradas=0;
-  descargadas=0;
   listable=0;
   exts_num=0;
 
   options.agente = AGENT_STRING;
   struct curl_slist *slist;
 
-  dirlist_current=(struct words *)malloc(sizeof(struct words));
-  memset(dirlist_current, 0, sizeof(struct words));
+  dirlist_current=(struct words *)calloc(1, sizeof(struct words));
   dirlist_base=dirlist_current;
   dirlist_final=dirlist_current;
 
@@ -215,10 +212,17 @@ int main(int argc, char *const *argv) {
 
   wordlist=crea_wordlist(options.mfile);
 
-  lanza_ataque(options.url_inicial, wordlist);
+  dirlist_current->word = malloc(strlen(options.url_inicial)+1);
+  dirlist_current->next = (struct words *) calloc(1, sizeof(struct words));
+  strcpy(dirlist_current->word, options.url_inicial);
+
+  while(dirlist_current->word) {
+    bruteforce(dirlist_current->word, wordlist);
+    dirlist_current=dirlist_current->next;
+  }
+
   cierre();
   exit(0);
-
 }
 
 

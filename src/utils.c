@@ -58,8 +58,13 @@ int location_cmp(char *A, char *B) {
     ptr=(char *)strchr(A, '/');
     if(ptr!=0) A=ptr+1;
     ptr=(char *)strchr(A, '/');
-    if(ptr!=0) A=ptr+1;
+    if(ptr!=0) A=ptr;
     }
+  
+  char *loc = strchr(A, ';');
+  if(loc!=0) {
+    *loc=0;
+  }
 
   if(options.debug_level>4) printf("[++++] location_cmp() A[%zu]: '%s'\n", strlen(A), A);
 
@@ -69,10 +74,11 @@ int location_cmp(char *A, char *B) {
     ptr=(char *)strchr(B, '/');
     if(ptr!=0) B=ptr+1;
     ptr=(char *)strchr(B, '/');
-    if(ptr!=0) B=ptr+1;
+    if(ptr!=0) B=ptr;
     }
 
   if(options.debug_level>4) printf("[++++] location_cmp() B[%zu]: '%s'\n", strlen(B), B);
+
 
   result=strncmp(A, B, strlen(A)>strlen(B) ? strlen(A) : strlen(B));
 
@@ -180,7 +186,6 @@ void cierre(void) {
   IMPRIME("\n-----------------\n");
 
   IMPRIME("END_TIME: %s", asctime(ptr));
-  IMPRIME("DOWNLOADED: %d - FOUND: %d\n", descargadas, encontradas);
 
   if(options.saveoutput) fclose(outfile);
 }

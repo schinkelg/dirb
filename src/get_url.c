@@ -135,22 +135,6 @@ size_t get_body(void *ptr, size_t size, size_t nmemb) {
 
   len=size*nmemb;
 
-  /* DEBUG */
-  if(options.debug_level>4) printf("[++++] get_body() LEN: %d\n", len);
-
-
-  // Tenemos que mirar si es listable
-  if(listable==-1) {
-
-    if(strstr(ptr, "Parent Directory")!=0 || strstr(ptr, "Up To ")!=0 || strstr(ptr, "Atrás A ")!=0 || strstr(ptr, "Al directorio pri")!=0 || strstr(ptr, "Directory Listing For")!=0) {
-    if(options.debug_level>3) printf("[+++] get_body() Directory is listable\n");
-    listable=1;
-      }
-
-    }
-
-
-  // Contamos bytes, palabras y lineas
   for(i=0;i<len;i++) {
 
   estructura.body_size++;
