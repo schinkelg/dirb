@@ -7,6 +7,12 @@
 
 #include "dirb.h"
 
+char *mkstr(const char * const first, const char * const second) {
+  char * newstr = malloc(strlen(first) + strlen(second) + 1);
+  strcpy(newstr, first);
+  strcat(newstr, second);
+  return newstr;
+}
 
 void limpia_url(char *limpia) {
   char *ptr;
@@ -60,7 +66,7 @@ int location_cmp(char *A, char *B) {
     ptr=(char *)strchr(A, '/');
     if(ptr!=0) A=ptr;
     }
-  
+
   char *loc = strchr(A, ';');
   if(loc!=0) {
     *loc=0;

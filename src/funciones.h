@@ -42,3 +42,4 @@ char kbhit(void);
 void cierre(void);
 char *code2string(struct code *a, unsigned int v);
 void init_exts(void);
+char *mkstr(const char * const first, const char * const second);

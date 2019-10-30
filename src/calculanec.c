@@ -18,8 +18,8 @@ int get_necs(const char *direccion) {
   exts_current=exts_base;
 
   for(unsigned int exts_pos=0;exts_pos<exts_num;exts_pos++) {
-    nec[exts_pos]=calcula_nec(direccion);
-    exts_current=exts_current->next;
+    nec[exts_pos] = calcula_nec(direccion);
+    exts_current = exts_current->next;
     not_found_count++;
     }
 
@@ -28,29 +28,22 @@ int get_necs(const char *direccion) {
 
 
 struct result *calcula_nec(const char *direccion) {
-  struct result nec1, nec2;
-  struct result *mynec;
-  char *url;
-  char *random_base_url1 = "randomfile1";
-  char *random_base_url2 = "frand2";
   char *rand_url1;
   char *rand_url2;
+  char *url;
+  const char *random_base_url1 = "randomfile1";
+  const char *random_base_url2 = "frand2";
+  struct result *mynec;
+  struct result nec1, nec2;
 
   mynec = calloc(1, sizeof(struct result));
-  memset(&nec1, 0, sizeof(struct result));
-  memset(&nec2, 0, sizeof(struct result));
+  memset(&nec1, 0,  sizeof(struct result));
+  memset(&nec2, 0,  sizeof(struct result));
 
-  rand_url1 = malloc(strlen(random_base_url1)+strlen(exts_current->word)+1);
-  strcpy(rand_url1, random_base_url1);
-  strcat(rand_url1, exts_current->word);
+  rand_url1 = mkstr(random_base_url1, exts_current->word);
+  url = mkstr(direccion, rand_url1);
 
-  url = malloc(strlen(direccion)+strlen(rand_url1)+1);
-  strcpy(url, direccion);
-  strcat(url, rand_url1);
-
-  nec1=get_url(url);
-
-  if(options.debug_level>2) printf("[++] calcula_nec() NEC1: %d\n", nec1.codigo_http);
+  nec1 = get_url(url);
 
   switch(nec1.codigo_http) {
 
@@ -64,16 +57,11 @@ struct result *calcula_nec(const char *direccion) {
       break;
     }
 
-  rand_url2 = malloc(strlen(random_base_url2)+strlen(exts_current->word)+1);
-  strcpy(rand_url2, random_base_url2);
-  strcat(rand_url2, exts_current->word);
+  rand_url2 = mkstr(random_base_url2, exts_current->word);
   free(url);
-  url = malloc(strlen(direccion)+strlen(rand_url2)+1);
-  strcpy(url, direccion);
-  strcat(url, rand_url2);
+  url = mkstr(direccion, rand_url2);
 
-  nec2=get_url(url);
-  if(options.debug_level>2) printf("[++] calcula_nec() NEC2: %d - %d\n", nec2.codigo_http, nec2.body_size);
+  nec2 = get_url(url);
 
   if(nec1.codigo_http==nec2.codigo_http) {
     switch(nec2.codigo_http) {
@@ -118,7 +106,6 @@ struct result *calcula_nec(const char *direccion) {
     strcpy(mynec->server, nec1.server);
   }
 
-  if(options.debug_level>2) printf("[++] calcula_nec() NEC: %d - %d\n", mynec->codigo_http, mynec->body_size);
   free(url);
   free(rand_url1);
   free(rand_url2);
